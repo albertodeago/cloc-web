@@ -17,18 +17,39 @@ export default {
   data: () => ({
     worker: null,
     message: "Hello Vue!",
+    startTime: 0,
+    endTime: 0,
   }),
 
   created() {
     if (typeof window !== "undefined") {
       console.log("created");
       this.worker = new Worker("./workers/main.ts", { type: "module" });
-      this.worker.addEventListener("message", (e) => {
-        const { type, payload } = e.data;
-        console.log({ type, payload });
-      });
+      this.worker.addEventListener(
+        "message",
+        ({ data }: { data: WorkerMessage }) => {
+          console.log(data);
+
+          if (data.cmd === "cloc-response") {
+            this.endTime = performance.now();
+            let totalLinesOfCode = 0;
+            data.payload.cloc.forEach((v) => (totalLinesOfCode += v));
+
+            console.log(
+              `Successfully CLOC project. Took ${
+                this.endTime - this.startTime
+              } milliseconds.\nCounted a total of ${
+                data.payload.countedFiles
+              } files.\nCounted a total of ${totalLinesOfCode} lines of code`
+            );
+
+            this.startTime = 0;
+            this.endTime = 0;
+          }
+        }
+      );
       this.worker.postMessage({
-        type: "ping",
+        cmd: "ping",
         payload: "Hello from the main!",
       });
     }
@@ -58,8 +79,10 @@ export default {
 
     async cloc() {
       const msg: WorkerMessage = {
-        cmd: "cloc",
+        cmd: "cloc-request",
       };
+
+      this.startTime = performance.now();
       this.worker.postMessage(msg);
     },
   },

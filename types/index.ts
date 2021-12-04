@@ -7,7 +7,17 @@ export type WorkerMessage =
       payload: SetDirHandleMessagePayload;
     }
   | {
-      cmd: "cloc";
+      cmd: "cloc-request";
+    }
+  | {
+      cmd: "cloc-response";
+      payload: ClocResponseMessagePayload;
     };
 
 export type SetDirHandleMessagePayload = any;
+export type ClocResponseMessagePayload = ClocResults;
+
+export type ClocResults = {
+  countedFiles: number;
+  cloc: Map<string, number>;
+};

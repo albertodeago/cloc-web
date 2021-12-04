@@ -1,3 +1,5 @@
+import { ClocResults } from "~~/types";
+
 const getFileContent = async (fileHandle) => {
   const fileData = await fileHandle.getFile();
   const fileText = await fileData.text();
@@ -14,7 +16,12 @@ const getExtension = (fileName) => {
   return extension;
 };
 
-const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
+const cloc = async function (
+  dirHandle,
+  results: ClocResults,
+  dirBlackList: Array<string>,
+  fileBlackList: Array<string>
+) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     console.log({ handleName, fsHandle });
 
@@ -27,21 +34,23 @@ const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
       }
     } else {
       if (!fileBlackList.includes(handleName)) {
-        console.log(`file ${handleName} found`);
+        // console.log(`file ${handleName} found`);
+        results.countedFiles++;
+
         const ext = getExtension(handleName);
         const fileContent = await getFileContent(fsHandle);
         const lines = fileContent.split("\n");
 
-        const amounfPerExt = results.get(ext) || 0;
-        results.set(ext, amounfPerExt + lines.length);
+        const amounfPerExt = results.cloc.get(ext) || 0;
+        results.cloc.set(ext, amounfPerExt + lines.length);
       } else {
-        console.log(`file ${handleName} skipped`);
+        // console.log(`file ${handleName} skipped`);
       }
     }
   }
 };
 
-const run = async function (dirHandle) {
+const run = async function (dirHandle): Promise<ClocResults> {
   // directories to ignore, usually these contains files that users don't want to count
   const dirBlackList = [
     ".svn",
@@ -57,14 +66,19 @@ const run = async function (dirHandle) {
   // files to ignore, usually these are files that users don't want to count
   const fileBlackList = ["package-lock.json", "yarn.lock", ".gitignore"];
 
-  const results = new Map();
+  const results = {
+    countedFiles: 0,
+    cloc: new Map(),
+  };
 
   await cloc(dirHandle, results, dirBlackList, fileBlackList);
 
   console.log("\n\nWork finished");
-  for (const [ext, amount] of results) {
+  for (const [ext, amount] of results.cloc) {
     console.log(`${ext}: ${amount}`);
   }
+
+  return results;
 };
 
 export default cloc;
