@@ -31,6 +31,27 @@ This version was a complete failure (as expected). With vuetify on my machine it
 Devtools were crushing (probably too many workers were spawned (1 per file) and I think there was more overhead) to
 send all the file contents to the "counter workers".
 
+The third version is different: TODO:
+
+TODO: with 10 workers
+  Successfully CLOC project. Took 28764.80000001192 milliseconds.
+  Counted a total of 6859 files.
+  Counted a total of 850362 lines of code
+
+TODO: with 20 workers
+  Successfully CLOC project. Took 39236.19999998808 milliseconds.
+  Counted a total of 6859 files.
+  Counted a total of 850362 lines of code
+
+Looks like incrementing the amount of workers actually degrades the performance. This may be an alogorithmic fault (I'm bad).
+
+The fourth version works like this:
+- spawn a worker that is responsible to iterate through the file system. For each file that he find, increment the
+number of workers to wait and send the filehandle to a new/free worker.
+When all the worker ends their job send data to the main thread. To check when the job is done he just increase a counter
+every time he find a new file to count, and increase another counter when a worker returns the results. When both are equal
+we're done.
+
 ## Setup
 
 Make sure to install the dependencies

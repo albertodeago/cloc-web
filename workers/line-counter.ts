@@ -1,16 +1,13 @@
-import { getFileContent } from "../cloc/utils";
-
 self.onmessage = async function (e) {
-  if (e.data.cmd !== "count-files") {
+  if (e.data.cmd !== "count-lines") {
     throw new Error("[FileCounterWorker] - Unknown command: " + e.data.cmd);
   }
 
-  const fileHandle = e.data.payload;
-  const fileContent = await getFileContent(fileHandle);
+  const fileContent = e.data.payload as string;
   const lines = fileContent.split("\n");
 
   self.postMessage({
-    cmd: "counted-file",
+    cmd: "counted-lines",
     payload: lines.length,
   });
 };

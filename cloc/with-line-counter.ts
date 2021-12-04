@@ -5,7 +5,7 @@ const awaitFromWorker = function (
   ext: string
 ): Promise<{ ext: string; lines: number }> {
   return new Promise((resolve, reject) => {
-    const worker = new Worker("../workers/file-counter.ts");
+    const worker = new Worker("../workers/line-counter.ts");
     worker.onmessage = function (e) {
       resolve({
         ext,
@@ -48,7 +48,7 @@ const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
   }
 };
 
-const runMultipleWorkers = async function (dirHandle) {
+const runWithLineCounters = async function (dirHandle) {
   const dirBlackList = [
     ".svn",
     ".cvs",
@@ -85,4 +85,4 @@ const runMultipleWorkers = async function (dirHandle) {
   return results;
 };
 
-export { runMultipleWorkers };
+export { runWithLineCounters };
