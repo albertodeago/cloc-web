@@ -1,5 +1,6 @@
 import { WorkerMessage } from "../types";
 import { run } from "../cloc";
+import { runMultipleWorkers } from "../cloc/dir-handle-parse";
 
 let dirHandle: any | null = null; // TODO: this should be typed
 
@@ -29,6 +30,21 @@ self.onmessage = async function (e: MessageEvent) {
         payload: results,
       };
       self.postMessage(msg);
+      break;
+
+    case "cloc-request-v2":
+      if (!dirHandle) {
+        throw new Error("dirHandle is null");
+      }
+      // This will read all the files and send their content to other workers.
+      // These workers will then run cloc on each file and send the results back to this one.
+      // Then we can send results back to main thread.
+      const resultsv2 = await runMultipleWorkers(dirHandle);
+      const msgv2: WorkerMessage = {
+        cmd: "cloc-response",
+        payload: resultsv2,
+      };
+      self.postMessage(msgv2);
       break;
 
     default:

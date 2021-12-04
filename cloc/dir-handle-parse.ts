@@ -1,12 +1,28 @@
-import { ClocResults } from "~~/types";
-import { getExtension, getFileContent } from "./utils";
+import { getFileContent, getExtension } from "./utils";
 
-const cloc = async function (
-  dirHandle,
-  results: ClocResults,
-  dirBlackList: Array<string>,
-  fileBlackList: Array<string>
-) {
+const awaitFromWorker = function (
+  fileContent: string,
+  ext: string
+): Promise<{ ext: string; lines: number }> {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker("../workers/file-counter.ts");
+    worker.onmessage = function (e) {
+      resolve({
+        ext,
+        lines: e.data.payload,
+      });
+      // terminate the worker when it's done
+      // self.requestIdleCallback(() => worker.terminate());
+      worker.terminate();
+    };
+    worker.postMessage({
+      cmd: "count-lines",
+      payload: fileContent,
+    });
+  });
+};
+
+const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     // console.log({ handleName, fsHandle });
 
@@ -24,10 +40,7 @@ const cloc = async function (
 
         const ext = getExtension(handleName);
         const fileContent = await getFileContent(fsHandle);
-        const lines = fileContent.split("\n");
-
-        const amounfPerExt = results.cloc.get(ext) || 0;
-        results.cloc.set(ext, amounfPerExt + lines.length);
+        results.promises.push(awaitFromWorker(fileContent, ext));
       } else {
         // console.log(`file ${handleName} skipped`);
       }
@@ -35,8 +48,7 @@ const cloc = async function (
   }
 };
 
-const run = async function (dirHandle): Promise<ClocResults> {
-  // directories to ignore, usually these contains files that users don't want to count
+const runMultipleWorkers = async function (dirHandle) {
   const dirBlackList = [
     ".svn",
     ".cvs",
@@ -54,9 +66,16 @@ const run = async function (dirHandle): Promise<ClocResults> {
   const results = {
     countedFiles: 0,
     cloc: new Map(),
+    promises: [],
   };
 
   await cloc(dirHandle, results, dirBlackList, fileBlackList);
+  const res = await Promise.all(results.promises);
+  res.forEach(({ ext, lines }) => {
+    const amounfPerExt = results.cloc.get(ext) || 0;
+    results.cloc.set(ext, amounfPerExt + lines);
+  });
+  delete results.promises;
 
   console.log("\n\nWork finished");
   for (const [ext, amount] of results.cloc) {
@@ -66,5 +85,4 @@ const run = async function (dirHandle): Promise<ClocResults> {
   return results;
 };
 
-export default cloc;
-export { run };
+export { runMultipleWorkers };

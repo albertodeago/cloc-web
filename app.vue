@@ -4,7 +4,10 @@
     <p>Inform the user that he must give permission to handle file system</p>
 
     <button @click="getDirHandle">Select project</button>
+    <br />
     <button @click="cloc">CLOC</button>
+    <br />
+    <button @click="clocV2">CLOC WITH MULTIPLE WORKERS</button>
   </div>
 </template>
 
@@ -80,6 +83,15 @@ export default {
     async cloc() {
       const msg: WorkerMessage = {
         cmd: "cloc-request",
+      };
+
+      this.startTime = performance.now();
+      this.worker.postMessage(msg);
+    },
+
+    async clocV2() {
+      const msg: WorkerMessage = {
+        cmd: "cloc-request-v2",
       };
 
       this.startTime = performance.now();

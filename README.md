@@ -23,6 +23,14 @@ it takes around **8598.8999** ms for a total of **6859** counted files and **850
 Everything is done inside a web worker so even if the count is taking a long time, the
 user interface remains interactive and snappy.
 
+The second version was a little different. The main thread sends the dirHandle to one "main" thread, this thread
+cycle trhough all the directories and files, for each files it read it's content and send it to a new Worker. This
+new worker just count the number of lines and return the results to the "main worker". This worker then put all
+the reults together.  
+This version was a complete failure (as expected). With vuetify on my machine it wasn't even able to finish the work.
+Devtools were crushing (probably too many workers were spawned (1 per file) and I think there was more overhead) to
+send all the file contents to the "counter workers".
+
 ## Setup
 
 Make sure to install the dependencies
