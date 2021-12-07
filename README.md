@@ -57,11 +57,29 @@ results got down a lot (so either I did some mistake in the previous version or 
   - with 8 workers:  3993
   - with 15 workers: 3056
   - with 25 workers: 3484
+
+The fourth (and last) version works like this:
 - spawn a worker that is responsible to iterate through the file system. For each file that he find, increment the
 number of workers to wait and send the filehandle to a new/free worker.
-When all the worker ends their job send data to the main thread. To check when the job is done he just increase a counter
+When a worker ends its job it sends the data to the first worker. To check when the job is done he just increase a counter
 every time he find a new file to count, and increase another counter when a worker returns the results. When both are equal
-we're done.
+we're done (the first count has a bit of delay because otherwise workers respond so fast that the program is finished just after the start -> we increment to one the files to count and send the data to the worker and he respond before the first thread set the counter
+to 2 so the program thinks he's done).
+TODO: 
+  - with 8 workers:  4505
+  - with 15 workers: 4187
+  - with 25 workers: 4163
+
+I was expecting this solution to be faster compared to the poller one, but maybe there is a motivation. In this fourth solution we are
+sending the first file to the first worker, the second to the second, and (if we have 8 workers) the ninth to the first worker again
+(we are using round robin like), so there is a possibility that one worker gets all the heaviest files of the project and he may
+be a bottleneck.  
+I'm not convinced though.
+
+Looks like the third one using a polling algorithm is the fastest so I'll be using that in the application.  
+Anyway even if these numbers are taken on my machine, I'm very happy to see that the solutions that uses multiple workers
+are a lot faster compared to the ones that uses only one worker or even worse the one that runs in the main thread
+(and that freeze the UI).
 
 ## Setup
 
