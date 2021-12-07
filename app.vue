@@ -4,8 +4,11 @@
     <p>Inform the user that he must give permission to handle file system</p>
 
     <button @click="getDirHandle">Select project</button>
+
+    <br /><br />
+    <button @click="clocMainThread">CLOC IN THE MAIN THREAD</button>
     <br />
-    <button @click="cloc">CLOC</button>
+    <button @click="cloc">CLOC WITH ONE WORKER</button>
     <br />
     <button @click="clocV2">CLOC WITH LINE COUNTER WORKERS</button>
     <br />
@@ -17,12 +20,14 @@
 
 <script lang="ts">
 import { WorkerMessage } from "./types";
+import { run } from "./cloc";
 
 export default {
   name: "app",
 
   data: () => ({
     worker: null,
+    dirHandle: null,
     message: "Hello Vue!",
     startTime: 0,
     endTime: 0,
@@ -81,7 +86,31 @@ export default {
         payload: dirHandle,
       };
       this.worker.postMessage(msg);
+      this.dirHandle = dirHandle;
       return dirHandle;
+    },
+
+    async clocMainThread() {
+      if (!this.dirHandle) {
+        throw new Error("You must select a directory first");
+      }
+      this.startTime = performance.now();
+      const results = await run(this.dirHandle);
+      this.endTime = performance.now();
+
+      let totalLinesOfCode = 0;
+      results.cloc.forEach((v) => (totalLinesOfCode += v));
+
+      console.log(
+        `Successfully CLOC project. Took ${
+          this.endTime - this.startTime
+        } milliseconds.\nCounted a total of ${
+          results.countedFiles
+        } files.\nCounted a total of ${totalLinesOfCode} lines of code`
+      );
+
+      this.startTime = 0;
+      this.endTime = 0;
     },
 
     async cloc() {

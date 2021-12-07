@@ -12,10 +12,10 @@ const cloc = async function (
 
     if (fsHandle.kind === "directory") {
       if (!dirBlackList.includes(handleName)) {
-        console.log(`dir ${handleName} found`);
+        // console.log(`dir ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
       } else {
-        console.log(`dir ${handleName} skipped`);
+        // console.log(`dir ${handleName} skipped`);
       }
     } else {
       if (!fileBlackList.includes(handleName)) {
