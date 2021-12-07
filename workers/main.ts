@@ -2,6 +2,7 @@ import { WorkerMessage } from "../types";
 import { run } from "../cloc";
 import { runWithLineCounters } from "../cloc/with-line-counter";
 import { runWithFileCounters } from "../cloc/with-file-counter";
+import { v4 } from "../cloc/v4";
 
 let dirHandle: any | null = null; // TODO: this should be typed
 
@@ -61,6 +62,23 @@ self.onmessage = async function (e: MessageEvent) {
         payload: resultsv3,
       };
       self.postMessage(msgv3);
+      break;
+
+    case "cloc-request-v4":
+      if (!dirHandle) {
+        throw new Error("dirHandle is null");
+      }
+      // spawn a worker that is responsible to iterate through the file system. For each file that he find, increment the
+      // number of workers to wait and send the filehandle to a new/free worker.
+      // When all the worker ends their job send data to the main thread. To check when the job is done he just increase a counter
+      // every time he find a new file to count, and increase another counter when a worker returns the results. When both are equal
+      // we're done.
+      const resultsv4 = await v4(dirHandle);
+      // const msgv4: WorkerMessage = {
+      //   cmd: "cloc-response",
+      //   payload: resultsv4,
+      // };
+      // self.postMessage(msgv4);
       break;
 
     default:

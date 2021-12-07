@@ -18,6 +18,9 @@ export type WorkerMessage =
     }
   | {
       cmd: "cloc-request-v3";
+    }
+  | {
+      cmd: "cloc-request-v4";
     };
 
 export type SetDirHandleMessagePayload = any;

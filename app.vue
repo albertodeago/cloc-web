@@ -10,6 +10,8 @@
     <button @click="clocV2">CLOC WITH LINE COUNTER WORKERS</button>
     <br />
     <button @click="clocV3">CLOC WITH FILE COUNTER WORKERS</button>
+    <br />
+    <button @click="clocV4">CLOC V4</button>
   </div>
 </template>
 
@@ -103,6 +105,15 @@ export default {
     async clocV3() {
       const msg: WorkerMessage = {
         cmd: "cloc-request-v3",
+      };
+
+      this.startTime = performance.now();
+      this.worker.postMessage(msg);
+    },
+
+    async clocV4() {
+      const msg: WorkerMessage = {
+        cmd: "cloc-request-v4",
       };
 
       this.startTime = performance.now();
