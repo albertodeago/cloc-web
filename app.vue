@@ -3,6 +3,8 @@
     <h1>{{ message }}</h1>
     <p>Inform the user that he must give permission to handle file system</p>
 
+    <knight-rider />
+
     <button @click="getDirHandle">Select project</button>
 
     <br /><br />
