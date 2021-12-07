@@ -17,6 +17,10 @@ If you are searching for a precide cloc go with the original software or newer o
 
 ## Benchmarks
 
+Consider that all the results here are taken on my machine and they sure are not perfect nor precise
+by any means, I just took these numbers to compare different solutions and use the one that
+looked most efficient (at least on my machine)
+
 The first version was a "sequential" count inside a web worker.  
 On my machine, to count the [vuetify repo]() (not a huge project, but neither small)
 it takes around **8598.8999** ms for a total of **6859** counted files and **850362** lines of code.  
@@ -31,21 +35,28 @@ This version was a complete failure (as expected). With vuetify on my machine it
 Devtools were crushing (probably too many workers were spawned (1 per file) and I think there was more overhead) to
 send all the file contents to the "counter workers".
 
-The third version is different: TODO:
-
-TODO: with 10 workers
+The third version is different: we create a pool of workers (tried with different numbers), every file we find we 
+send the fsHandle to a worker and when it respond we get the results and set the workers as "free".
+The first approach I tried was to associate a promise to each worker and resolving when he respond. The pool of worker
+has a method "getFreeWorker" that waits for any promise to be fullfilled and return the associated worker.
+Probably I got something wrong but this was getting me shit results:
+TODO: with 8 workers
   Successfully CLOC project. Took 28764.80000001192 milliseconds.
   Counted a total of 6859 files.
   Counted a total of 850362 lines of code
 
-TODO: with 20 workers
+TODO: with 15 workers
   Successfully CLOC project. Took 39236.19999998808 milliseconds.
   Counted a total of 6859 files.
   Counted a total of 850362 lines of code
 
 Looks like incrementing the amount of workers actually degrades the performance. This may be an alogorithmic fault (I'm bad).
 
-The fourth version works like this:
+So I tried to improve this version with a "polling mechanism" to get the free worker. With this simple improvement the
+results got down a lot (so either I did some mistake in the previous version or the approach was totally garbage)
+  - with 8 workers:  3993
+  - with 15 workers: 3056
+  - with 25 workers: 3484
 - spawn a worker that is responsible to iterate through the file system. For each file that he find, increment the
 number of workers to wait and send the filehandle to a new/free worker.
 When all the worker ends their job send data to the main thread. To check when the job is done he just increase a counter

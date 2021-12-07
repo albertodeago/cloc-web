@@ -15,7 +15,7 @@ var Deferred = function Deferred() {
 Deferred.Promise = Promise;
 
 const workerPool = [];
-const maxWorkers = 8;
+const maxWorkers = 15;
 let workerId = 0;
 
 while (workerPool.length < maxWorkers - 1) {
@@ -58,12 +58,34 @@ const getFreeWorker = async function (): Promise<{
   });
 };
 
+const pollForWorker = (resolve) => {
+  let obj = workerPool.find((obj) => obj.status === "free");
+  if (!obj) {
+    setTimeout(() => pollForWorker(resolve), 25);
+  } else {
+    obj.status = "busy";
+    obj.def = new Deferred();
+    resolve(obj);
+  }
+};
+const getForWorker = function (): Promise<{
+  worker: Worker;
+  id: number;
+  status: "free" | "busy";
+  def: any;
+}> {
+  return new Promise((resolve) => {
+    pollForWorker(resolve);
+  });
+};
+
 const awaitFromWorker = async function (
   fsHandle: any,
   ext: string
 ): Promise<{ ext: string; lines: number }> {
   return new Promise(async (resolve) => {
-    const obj = await getFreeWorker();
+    // const obj = await getFreeWorker();
+    const obj = await getForWorker();
     obj.worker.onmessage = function (e) {
       // console.log("file counted by " + obj.id + ". Lines:" + e.data.payload);
       resolve({
@@ -86,10 +108,10 @@ const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
 
     if (fsHandle.kind === "directory") {
       if (!dirBlackList.includes(handleName)) {
-        console.log(`dir ${handleName} found`);
+        // console.log(`dir ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
       } else {
-        console.log(`dir ${handleName} skipped`);
+        // console.log(`dir ${handleName} skipped`);
       }
     } else {
       if (!fileBlackList.includes(handleName)) {
