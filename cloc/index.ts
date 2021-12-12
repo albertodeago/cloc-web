@@ -1,8 +1,10 @@
 import { ClocResults } from "~~/types";
 import { getExtension, getFileContent } from "./utils";
 
+import "wicg-file-system-access";
+
 const cloc = async function (
-  dirHandle,
+  dirHandle: FileSystemDirectoryHandle,
   results: ClocResults,
   dirBlackList: Array<string>,
   fileBlackList: Array<string>

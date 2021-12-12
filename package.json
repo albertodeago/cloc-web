@@ -9,6 +9,6 @@
     "nuxt3": "latest"
   },
   "dependencies": {
-    "@types/wicg-entries-api": "^2020.8.2"
+    "@types/wicg-file-system-access": "^2020.9.4"
   }
 }

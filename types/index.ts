@@ -1,16 +1,22 @@
+import "wicg-file-system-access";
+
 export type WorkerMessage =
-  | {
-      cmd: "set-dir-handle";
-      payload: SetDirHandleMessagePayload;
-    }
-  | {
-      cmd: "cloc-response";
-      payload: ClocResponseMessagePayload;
-    }
+  | SetDirHandle
+  | ClocResp
   | ClocReqSingleWorker
   | ClocReqLineWorkers
   | ClocReqFileWorkers
   | ClocReqV4;
+
+type SetDirHandle = {
+  cmd: "set-dir-handle";
+  payload: FileSystemDirectoryHandle;
+};
+
+type ClocResp = {
+  cmd: "cloc-response";
+  payload: ClocResponseMessagePayload;
+};
 
 type ClocReqSingleWorker = {
   cmd: "cloc-req-single-worker";

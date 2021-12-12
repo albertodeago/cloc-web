@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts">
+import "wicg-file-system-access";
 import { WorkerMessage } from "./types";
 import { run } from "./cloc";
 

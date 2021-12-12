@@ -4,7 +4,7 @@ import { runWithLineCounters } from "../cloc/with-line-counter";
 import { runWithFileCounters } from "../cloc/with-file-counter";
 import { v4 } from "../cloc/v4";
 
-let dirHandle: any | null = null; // TODO: this should be typed
+let dirHandle: FileSystemDirectoryHandle | null = null;
 
 self.onmessage = async function (e: MessageEvent) {
   let data = e.data as WorkerMessage;
