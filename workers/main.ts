@@ -11,21 +11,16 @@ self.onmessage = async function (e: MessageEvent) {
   console.log(`[worker]: ${data.cmd}`);
 
   switch (data.cmd) {
-    case "ping":
-      self.postMessage({
-        type: "hello",
-        payload: "Hello from worker !",
-      });
-      break;
-
     case "set-dir-handle":
       dirHandle = data.payload;
       break;
 
-    case "cloc-request":
+    case "cloc-req-single-worker":
+      // In this case we use the current worker to process the request
       if (!dirHandle) {
         throw new Error("dirHandle is null");
       }
+
       const results = await run(dirHandle);
       const msg: WorkerMessage = {
         cmd: "cloc-response",
@@ -34,7 +29,7 @@ self.onmessage = async function (e: MessageEvent) {
       self.postMessage(msg);
       break;
 
-    case "cloc-request-v2":
+    case "cloc-req-line-workers":
       if (!dirHandle) {
         throw new Error("dirHandle is null");
       }
@@ -49,7 +44,7 @@ self.onmessage = async function (e: MessageEvent) {
       self.postMessage(msgv2);
       break;
 
-    case "cloc-request-v3":
+    case "cloc-req-file-workers":
       if (!dirHandle) {
         throw new Error("dirHandle is null");
       }
@@ -64,7 +59,7 @@ self.onmessage = async function (e: MessageEvent) {
       self.postMessage(msgv3);
       break;
 
-    case "cloc-request-v4":
+    case "cloc-req-v4":
       if (!dirHandle) {
         throw new Error("dirHandle is null");
       }
@@ -73,12 +68,7 @@ self.onmessage = async function (e: MessageEvent) {
       // When all the worker ends their job send data to the main thread. To check when the job is done he just increase a counter
       // every time he find a new file to count, and increase another counter when a worker returns the results. When both are equal
       // we're done.
-      const resultsv4 = await v4(dirHandle);
-      // const msgv4: WorkerMessage = {
-      //   cmd: "cloc-response",
-      //   payload: resultsv4,
-      // };
-      // self.postMessage(msgv4);
+      v4(dirHandle);
       break;
 
     default:

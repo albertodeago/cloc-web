@@ -1,27 +1,32 @@
 export type WorkerMessage =
   | {
-      cmd: "ping";
-    }
-  | {
       cmd: "set-dir-handle";
       payload: SetDirHandleMessagePayload;
-    }
-  | {
-      cmd: "cloc-request";
     }
   | {
       cmd: "cloc-response";
       payload: ClocResponseMessagePayload;
     }
-  | {
-      cmd: "cloc-request-v2";
-    }
-  | {
-      cmd: "cloc-request-v3";
-    }
-  | {
-      cmd: "cloc-request-v4";
-    };
+  | ClocReqSingleWorker
+  | ClocReqLineWorkers
+  | ClocReqFileWorkers
+  | ClocReqV4;
+
+type ClocReqSingleWorker = {
+  cmd: "cloc-req-single-worker";
+};
+
+type ClocReqLineWorkers = {
+  cmd: "cloc-req-line-workers";
+};
+
+type ClocReqFileWorkers = {
+  cmd: "cloc-req-file-workers";
+};
+
+type ClocReqV4 = {
+  cmd: "cloc-req-v4";
+};
 
 export type SetDirHandleMessagePayload = any;
 export type ClocResponseMessagePayload = ClocResults;

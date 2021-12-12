@@ -10,11 +10,11 @@
     <br /><br />
     <button @click="clocMainThread">CLOC IN THE MAIN THREAD</button>
     <br />
-    <button @click="cloc">CLOC WITH ONE WORKER</button>
+    <button @click="clocSingleWorker">CLOC WITH ONE WORKER</button>
     <br />
-    <button @click="clocV2">CLOC WITH LINE COUNTER WORKERS</button>
+    <button @click="clocLineWorkers">CLOC WITH LINE COUNTER WORKERS</button>
     <br />
-    <button @click="clocV3">CLOC WITH FILE COUNTER WORKERS</button>
+    <button @click="clocFileWorkers">CLOC WITH FILE COUNTER WORKERS</button>
     <br />
     <button @click="clocV4">CLOC V4</button>
   </div>
@@ -37,8 +37,7 @@ export default {
 
   created() {
     if (typeof window !== "undefined") {
-      console.log("created");
-      this.worker = new Worker("./workers/main.ts", { type: "module" });
+      this.worker = this.createMainWorker();
       this.worker.addEventListener(
         "message",
         ({ data }: { data: WorkerMessage }) => {
@@ -62,24 +61,24 @@ export default {
           }
         }
       );
-      this.worker.postMessage({
-        cmd: "ping",
-        payload: "Hello from the main!",
-      });
     }
   },
 
   methods: {
+    createMainWorker(): Worker {
+      return new Worker("./workers/main.ts", { type: "module" });
+    },
+
+    /**
+     * Get a Directory handle and send it to the worker
+     */
     async getDirHandle() {
       // Get a file handle by showing a file picker:
       // @ts-ignore-next-line
       const dirHandle = await window.showDirectoryPicker();
       if (!dirHandle) {
         // User cancelled, or otherwise failed to open a file.
-        console.error(
-          "No handle, the user cancelled the operation or something is wrong"
-        );
-        // TODO: inform the user?
+        alert("You must select the directory of a project");
         return;
       }
 
@@ -87,6 +86,7 @@ export default {
         cmd: "set-dir-handle",
         payload: dirHandle,
       };
+
       this.worker.postMessage(msg);
       this.dirHandle = dirHandle;
       return dirHandle;
@@ -115,36 +115,51 @@ export default {
       this.endTime = 0;
     },
 
-    async cloc() {
+    /**
+     * CLOC with just one WebWorker
+     */
+    async clocSingleWorker() {
       const msg: WorkerMessage = {
-        cmd: "cloc-request",
+        cmd: "cloc-req-single-worker",
       };
 
       this.startTime = performance.now();
       this.worker.postMessage(msg);
     },
 
-    async clocV2() {
+    /**
+     * CLOC using multiple WebWorkers that just count the lines of code
+     * (they receive the string that is the file content and return the number of lines)
+     */
+    async clocLineWorkers() {
       const msg: WorkerMessage = {
-        cmd: "cloc-request-v2",
+        cmd: "cloc-req-line-workers",
       };
 
       this.startTime = performance.now();
       this.worker.postMessage(msg);
     },
 
-    async clocV3() {
+    /**
+     * CLOC using multiple WebWorkers that takes a FileHandle, read its content, count the line
+     * and then return the results back
+     */
+    async clocFileWorkers() {
       const msg: WorkerMessage = {
-        cmd: "cloc-request-v3",
+        cmd: "cloc-req-file-workers",
       };
 
       this.startTime = performance.now();
       this.worker.postMessage(msg);
     },
 
+    /**
+     * CLOC using multiple WebWorkers same as FileWorkers, but this time all the workers
+     * respond to the main thread directly, this is a fire and forget approach
+     */
     async clocV4() {
       const msg: WorkerMessage = {
-        cmd: "cloc-request-v4",
+        cmd: "cloc-req-v4",
       };
 
       this.startTime = performance.now();
