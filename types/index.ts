@@ -15,7 +15,7 @@ type SetDirHandle = {
 
 type ClocResp = {
   cmd: "cloc-response";
-  payload: ClocResponseMessagePayload;
+  payload: ClocResults;
 };
 
 type ClocReqSingleWorker = {
@@ -33,9 +33,6 @@ type ClocReqFileWorkers = {
 type ClocReqV4 = {
   cmd: "cloc-req-v4";
 };
-
-export type SetDirHandleMessagePayload = any;
-export type ClocResponseMessagePayload = ClocResults;
 
 export type ClocResults = {
   countedFiles: number;
