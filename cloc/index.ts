@@ -1,5 +1,5 @@
-import "wicg-file-system-access";
-import { ClocResults } from "~~/types";
+// import "wicg-file-system-access";
+import { ClocResults } from "../types";
 import { getExtension, getFileContent } from "./utils";
 
 const cloc = async function (
@@ -36,7 +36,9 @@ const cloc = async function (
   }
 };
 
-const run = async function (dirHandle): Promise<ClocResults> {
+const run = async function (
+  dirHandle: FileSystemDirectoryHandle
+): Promise<ClocResults> {
   // directories to ignore, usually these contains files that users don't want to count
   const dirBlackList = [
     ".svn",

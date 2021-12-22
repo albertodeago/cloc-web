@@ -5,7 +5,9 @@ const awaitFromWorker = function (
   ext: string
 ): Promise<{ ext: string; lines: number }> {
   return new Promise((resolve, reject) => {
-    const worker = new Worker("../workers/line-counter.ts");
+    const worker = new Worker(
+      new URL("../workers/line-counter.ts", import.meta.url)
+    );
     worker.onmessage = function (e) {
       resolve({
         ext,

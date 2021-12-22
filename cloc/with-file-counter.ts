@@ -21,7 +21,7 @@ let workerId = 0;
 while (workerPool.length < maxWorkers - 1) {
   workerPool.push({
     id: workerId,
-    worker: new Worker("../workers/file-counter.ts", { type: "module" }),
+    worker: new Worker(new URL("../workers/file-counter.ts", import.meta.url)),
     status: "free",
     def: null,
   });

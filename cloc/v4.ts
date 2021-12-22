@@ -12,9 +12,9 @@ const results = {
 };
 
 while (workerPool.length < maxWorkers) {
-  const worker = new Worker("../workers/file-counter-v4.ts", {
-    type: "module",
-  });
+  const worker = new Worker(
+    new URL("../workers/file-counter-v4.ts", import.meta.url)
+  );
   workerPool.push({
     id: workerId,
     status: "free",
