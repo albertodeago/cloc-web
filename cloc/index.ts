@@ -54,7 +54,7 @@ const run = async function (
   // files to ignore, usually these are files that users don't want to count
   const fileBlackList = ["package-lock.json", "yarn.lock", ".gitignore"];
 
-  const results = {
+  const results: ClocResults = {
     countedFiles: 0,
     cloc: new Map(),
   };

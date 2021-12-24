@@ -1,20 +1,63 @@
-import { getFileContent, getExtension } from "./utils";
+import { ClocResults } from "../types";
+import { getExtension } from "./utils";
 
-var Deferred = function Deferred() {
-  if (!(this instanceof Deferred)) {
-    return new Deferred();
+interface ClocResultsWithPromises extends ClocResults {
+  promises: Array<Promise<{ ext: string; lines: number }>>;
+}
+// type Deferred = {
+//   promise: Promise<any>;
+//   resolve: Function;
+//   reject: Function;
+// }
+// function Deferred() {
+//   // @ts-ignore-line
+//   if (!(this instanceof Deferred)) {
+//     // @ts-ignore-line
+//     return new Deferred();
+//   }
+
+//   // @ts-ignore-line
+//   var self = this;
+//   self.promise = new Promise(function (resolve, reject) {
+//     self.resolve = resolve;
+//     self.reject = reject;
+//   });
+//   return self;
+// } as any as { new(): Deferred };
+
+class Deferred<T> {
+  public promise: Promise<T>;
+
+  // @ts-ignore-line
+  private _resolve: Function;
+  // @ts-ignore-line
+  private _reject: Function;
+
+  constructor() {
+    this.promise = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+      this._reject = reject;
+    });
   }
 
-  var self = this;
-  self.promise = new Promise(function (resolve, reject) {
-    self.resolve = resolve;
-    self.reject = reject;
-  });
-  return self;
-};
-Deferred.Promise = Promise;
+  resolve(value?: any) {
+    this._resolve(value);
+  }
 
-const workerPool = [];
+  reject(reason?: any) {
+    this._reject(reason);
+  }
+}
+
+// Deferred.Promise = Promise;
+
+type WorkerPoolItem = {
+  id: number;
+  status: "free" | "busy";
+  def: Deferred<WorkerPoolItem>;
+  worker: Worker;
+};
+const workerPool: Array<WorkerPoolItem> = [];
 const maxWorkers = 15;
 let workerId = 0;
 
@@ -23,7 +66,7 @@ while (workerPool.length < maxWorkers - 1) {
     id: workerId,
     worker: new Worker(new URL("../workers/file-counter.ts", import.meta.url)),
     status: "free",
-    def: null,
+    def: new Deferred(),
   });
   workerId++;
 }
@@ -58,7 +101,7 @@ const getFreeWorker = async function (): Promise<{
   });
 };
 
-const pollForWorker = (resolve) => {
+const pollForWorker = (resolve: Function) => {
   let obj = workerPool.find((obj) => obj.status === "free");
   if (!obj) {
     setTimeout(() => pollForWorker(resolve), 25);
@@ -102,7 +145,12 @@ const awaitFromWorker = async function (
   });
 };
 
-const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
+const cloc = async function (
+  dirHandle: FileSystemDirectoryHandle,
+  results: ClocResultsWithPromises,
+  dirBlackList: Array<string>,
+  fileBlackList: Array<string>
+) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     // console.log({ handleName, fsHandle });
 
@@ -127,7 +175,9 @@ const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
   }
 };
 
-const runWithFileCounters = async function (dirHandle) {
+const runWithFileCounters = async function (
+  dirHandle: FileSystemDirectoryHandle
+) {
   const dirBlackList = [
     ".svn",
     ".cvs",
@@ -142,7 +192,7 @@ const runWithFileCounters = async function (dirHandle) {
   // files to ignore, usually these are files that users don't want to count
   const fileBlackList = ["package-lock.json", "yarn.lock", ".gitignore"];
 
-  const results = {
+  const results: ClocResultsWithPromises = {
     countedFiles: 0,
     cloc: new Map(),
     promises: [],
@@ -156,14 +206,17 @@ const runWithFileCounters = async function (dirHandle) {
     const amounfPerExt = results.cloc.get(ext) || 0;
     results.cloc.set(ext, amounfPerExt + lines);
   });
-  delete results.promises;
+  const realResults: ClocResults = {
+    countedFiles: results.countedFiles,
+    cloc: results.cloc,
+  };
 
   console.log("\n\nWork finished");
-  for (const [ext, amount] of results.cloc) {
+  for (const [ext, amount] of realResults.cloc) {
     console.log(`${ext}: ${amount}`);
   }
 
-  return results;
+  return realResults;
 };
 
 export { runWithFileCounters };

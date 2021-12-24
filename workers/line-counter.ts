@@ -1,3 +1,4 @@
+// @ts-ignore-line
 self.onmessage = async function (e) {
   if (e.data.cmd !== "count-lines") {
     throw new Error("[LineCounterWorker] - Unknown command: " + e.data.cmd);

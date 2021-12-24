@@ -18,7 +18,7 @@ const getExtension = (fileName: string): string => {
     return "no-extension";
   }
 
-  const extension = splitName.pop();
+  const extension = splitName.pop() as string;
   return extension;
 };
 

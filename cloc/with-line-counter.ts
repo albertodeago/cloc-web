@@ -1,4 +1,9 @@
+import { ClocResults } from "../types";
 import { getFileContent, getExtension } from "./utils";
+
+interface ClocResultsWithPromises extends ClocResults {
+  promises: Array<Promise<{ ext: string; lines: number }>>;
+}
 
 const awaitFromWorker = function (
   fileContent: string,
@@ -24,7 +29,12 @@ const awaitFromWorker = function (
   });
 };
 
-const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
+const cloc = async function (
+  dirHandle: FileSystemDirectoryHandle,
+  results: ClocResultsWithPromises,
+  dirBlackList: Array<string>,
+  fileBlackList: Array<string>
+) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     // console.log({ handleName, fsHandle });
 
@@ -50,7 +60,9 @@ const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
   }
 };
 
-const runWithLineCounters = async function (dirHandle) {
+const runWithLineCounters = async function (
+  dirHandle: FileSystemDirectoryHandle
+) {
   const dirBlackList = [
     ".svn",
     ".cvs",
@@ -77,14 +89,17 @@ const runWithLineCounters = async function (dirHandle) {
     const amounfPerExt = results.cloc.get(ext) || 0;
     results.cloc.set(ext, amounfPerExt + lines);
   });
-  delete results.promises;
+  const realResults: ClocResults = {
+    countedFiles: results.countedFiles,
+    cloc: results.cloc,
+  };
 
   console.log("\n\nWork finished");
-  for (const [ext, amount] of results.cloc) {
+  for (const [ext, amount] of realResults.cloc) {
     console.log(`${ext}: ${amount}`);
   }
 
-  return results;
+  return realResults;
 };
 
 export { runWithLineCounters };

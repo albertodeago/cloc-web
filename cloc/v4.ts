@@ -1,6 +1,12 @@
+import { ClocResults } from "../types";
 import { getExtension } from "./utils";
 
-const workerPool = [];
+type WorkerPoolItem = {
+  id: number;
+  status: "free";
+  worker: Worker;
+};
+const workerPool: Array<WorkerPoolItem> = [];
 const maxWorkers = 15;
 let workerId = 0;
 
@@ -58,11 +64,14 @@ while (workerPool.length < maxWorkers) {
 let counter = 0;
 let firstRun = false;
 const firstDelay = 350;
-const sendMessage = async function (handleName, fsHandle) {
+const sendMessage = async function (
+  handleName: string,
+  fsHandle: FileSystemFileHandle
+) {
   const { id, worker } = workerPool[counter];
   counter = (counter + 1) % maxWorkers;
 
-  const run = (fileName, fileHandle) => {
+  const run = (fileName: string, fileHandle: FileSystemFileHandle) => {
     worker.postMessage({
       cmd: "count-files",
       id,
@@ -81,7 +90,12 @@ const sendMessage = async function (handleName, fsHandle) {
   }
 };
 
-const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
+const cloc = async function (
+  dirHandle: FileSystemDirectoryHandle,
+  results: ClocResults,
+  dirBlackList: Array<string>,
+  fileBlackList: Array<string>
+) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     if (fsHandle.kind === "directory") {
       if (!dirBlackList.includes(handleName)) {
@@ -102,7 +116,7 @@ const cloc = async function (dirHandle, results, dirBlackList, fileBlackList) {
   }
 };
 
-const v4 = async function (dirHandle) {
+const v4 = async function (dirHandle: FileSystemDirectoryHandle) {
   const dirBlackList = [
     ".svn",
     ".cvs",
