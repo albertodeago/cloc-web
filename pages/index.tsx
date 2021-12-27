@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect } from "react";
 import { run } from "../cloc";
-import KnightRider from "../components/KnightRider";
+import { KnightRider, Title, InfoCorner } from "../components";
 import { WorkerMessage } from "../types";
 
 let worker: Worker;
@@ -128,7 +128,9 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <KnightRider />
+      <InfoCorner />
+      <Title />
+      {/* <KnightRider /> */}
 
       <main>
         <p>

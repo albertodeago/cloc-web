@@ -1,0 +1,19 @@
+.container {
+  --dimension: 10rem;
+
+  position: fixed;
+  top: calc(var(--dimension) / 2 * -1);
+  right: calc(var(--dimension) / 2 * -1);
+  width: var(--dimension);
+  height: var(--dimension);
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+}
+
+.items {
+  position: absolute;
+
+  bottom: 20%;
+  left: 20%;
+}

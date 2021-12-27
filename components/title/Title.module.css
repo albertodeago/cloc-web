@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10rem;
+}
+
+.letterContainer {
+  position: relative;
+  display: inline;
+}
+
+.firstLetter {
+  display: inline;
+  font-size: 6rem;
+}
+
+.verticalText {
+  position: absolute;
+
+  /* manually centering :\ */
+  top: 6.5ch;
+  left: 37%;
+
+  font-size: 1.75rem;
+  color: grey;
+
+  /* force vertical text (but centered) */
+  width: 1ch;
+  word-wrap: break-word;
+  text-align: center;
+}

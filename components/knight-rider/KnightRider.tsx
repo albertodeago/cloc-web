@@ -1,6 +1,6 @@
 import styles from "./KnightRider.module.css";
 
-export default function () {
+export function KnightRider() {
   return (
     <div className={styles.kitt}>
       <div className={styles.one}></div>
