@@ -1,4 +1,4 @@
-import { getFileContent, getExtension } from "../cloc/utils";
+import { getFileContent, getExtension } from "../utils";
 
 self.onmessage = async function (e) {
   const { id, cmd, fileName, fileHandle } = e.data;

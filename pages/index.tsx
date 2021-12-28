@@ -1,7 +1,9 @@
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import styles from "../styles/home.module.css";
+import { compare } from "../utils";
 import { run } from "../cloc";
-import { KnightRider, Title, InfoCorner } from "../components";
+import { KnightRider, Title, InfoCorner, AllowMessage } from "../components";
 import { WorkerMessage } from "../types";
 
 let worker: Worker;
@@ -10,25 +12,42 @@ let startTime: number = 0;
 let endTime: number = 0;
 
 const Home: NextPage = () => {
+  const [countedFiles, setCountedFiles] = useState<number>(0);
+  const [countedLines, setCountedLines] = useState<number>(0);
+  const [counters, setCounters] = useState<Array<[string, number]>>([]);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+  const logResponse = (
+    startTime: number,
+    endTime: number,
+    totalLinesOfCode: number,
+    countedFiles: number
+  ): void => {
+    console.log(
+      `Successfully CLOC project. Took ${
+        endTime - startTime
+      } milliseconds.\nCounted a total of ${countedFiles} files.\nCounted a total of ${totalLinesOfCode} lines of code`
+    );
+  };
+
   const getDirHandle = async () => {
     const dh = await window.showDirectoryPicker();
     if (!dh) {
       alert("You must select the directory of a project");
+      throw new Error("No directory selected");
     } else {
-      dirHandle = dh;
-
       const msg: WorkerMessage = {
         cmd: "set-dir-handle",
         payload: dirHandle,
       };
       worker.postMessage(msg);
+
+      dirHandle = dh;
     }
   };
 
   const clocMainThread = async () => {
-    if (!dirHandle) {
-      throw new Error("You must select a directory first");
-    }
+    await getDirHandle();
 
     startTime = performance.now();
     const results = await run(dirHandle);
@@ -37,22 +56,13 @@ const Home: NextPage = () => {
     let totalLinesOfCode = 0;
     results.cloc.forEach((v) => (totalLinesOfCode += v));
 
-    console.log(
-      `Successfully CLOC project. Took ${
-        endTime - startTime
-      } milliseconds.\nCounted a total of ${
-        results.countedFiles
-      } files.\nCounted a total of ${totalLinesOfCode} lines of code`
-    );
-
+    logResponse(startTime, endTime, totalLinesOfCode, results.countedFiles);
     startTime = 0;
     endTime = 0;
   };
 
   const clocSingleWorker = async () => {
-    if (!dirHandle) {
-      throw new Error("You must select a directory first");
-    }
+    await getDirHandle();
 
     const msg: WorkerMessage = {
       cmd: "cloc-req-single-worker",
@@ -62,9 +72,7 @@ const Home: NextPage = () => {
   };
 
   const clocLineWorkers = async () => {
-    if (!dirHandle) {
-      throw new Error("You must select a directory first");
-    }
+    await getDirHandle();
 
     const msg: WorkerMessage = {
       cmd: "cloc-req-line-workers",
@@ -74,9 +82,7 @@ const Home: NextPage = () => {
   };
 
   const clocFileWorkers = async () => {
-    if (!dirHandle) {
-      throw new Error("You must select a directory first");
-    }
+    await getDirHandle();
 
     const msg: WorkerMessage = {
       cmd: "cloc-req-file-workers",
@@ -86,9 +92,7 @@ const Home: NextPage = () => {
   };
 
   const clocV4 = async () => {
-    if (!dirHandle) {
-      throw new Error("You must select a directory first");
-    }
+    await getDirHandle();
 
     const msg: WorkerMessage = {
       cmd: "cloc-req-v4",
@@ -97,32 +101,39 @@ const Home: NextPage = () => {
     worker.postMessage(msg);
   };
 
+  const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
+    console.log(data);
+
+    if (data.cmd === "cloc-response") {
+      endTime = performance.now();
+      let totalLinesOfCode = 0;
+      data.payload.cloc.forEach((v) => (totalLinesOfCode += v));
+
+      logResponse(
+        startTime,
+        endTime,
+        totalLinesOfCode,
+        data.payload.countedFiles
+      );
+
+      setElapsedTime(Math.round(endTime - startTime));
+      setCountedFiles(data.payload.countedFiles);
+      setCountedLines(totalLinesOfCode);
+      const counters: Array<[string, number]> = [];
+      data.payload.cloc.forEach((v, k) => counters.push([k, v]));
+      counters.sort(compare);
+      setCounters(counters);
+
+      startTime = 0;
+      endTime = 0;
+    }
+  };
+
   useEffect(() => {
+    // create web worker client side
     if (typeof window !== "undefined") {
       worker = new Worker(new URL("../workers/main.ts", import.meta.url));
-      worker.addEventListener(
-        "message",
-        ({ data }: { data: WorkerMessage }) => {
-          console.log(data);
-
-          if (data.cmd === "cloc-response") {
-            endTime = performance.now();
-            let totalLinesOfCode = 0;
-            data.payload.cloc.forEach((v) => (totalLinesOfCode += v));
-
-            console.log(
-              `Successfully CLOC project. Took ${
-                endTime - startTime
-              } milliseconds.\nCounted a total of ${
-                data.payload.countedFiles
-              } files.\nCounted a total of ${totalLinesOfCode} lines of code`
-            );
-
-            startTime = 0;
-            endTime = 0;
-          }
-        }
-      );
+      worker.addEventListener("message", onWorkerMessage);
     }
   }, []);
 
@@ -132,12 +143,10 @@ const Home: NextPage = () => {
       <Title />
       {/* <KnightRider /> */}
 
-      <main>
-        <p>
-          Inform the user that he has to give permission to access file system
-        </p>
+      <main className={styles.mainContent}>
+        <AllowMessage />
 
-        <button onClick={() => getDirHandle()}>Select project</button>
+        {/* <button onClick={() => getDirHandle()}>Select project</button> */}
 
         <button onClick={() => clocMainThread()}>Cloc main thread</button>
         <br />
@@ -149,6 +158,24 @@ const Home: NextPage = () => {
         <br />
         <button onClick={() => clocV4()}>Cloc v4</button>
         <br />
+
+        <div className="results">
+          {countedFiles !== 0 && countedLines !== 0 && (
+            <>
+              <p className="total">
+                Counted {countedFiles} files and {countedLines} lines of code in{" "}
+                {elapsedTime}ms.
+              </p>
+              <ul>
+                {counters.map((obj) => (
+                  <li key={obj[0]}>
+                    {obj[0]} - {obj[1]}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import { getFileContent } from "../cloc/utils";
+import { getFileContent } from "../utils";
 
 self.onmessage = async function (e) {
   if (e.data.cmd !== "count-files") {

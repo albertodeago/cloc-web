@@ -1,29 +1,9 @@
 import { ClocResults } from "../types";
-import { getExtension } from "./utils";
+import { getExtension } from "../utils";
 
 interface ClocResultsWithPromises extends ClocResults {
   promises: Array<Promise<{ ext: string; lines: number }>>;
 }
-// type Deferred = {
-//   promise: Promise<any>;
-//   resolve: Function;
-//   reject: Function;
-// }
-// function Deferred() {
-//   // @ts-ignore-line
-//   if (!(this instanceof Deferred)) {
-//     // @ts-ignore-line
-//     return new Deferred();
-//   }
-
-//   // @ts-ignore-line
-//   var self = this;
-//   self.promise = new Promise(function (resolve, reject) {
-//     self.resolve = resolve;
-//     self.reject = reject;
-//   });
-//   return self;
-// } as any as { new(): Deferred };
 
 class Deferred<T> {
   public promise: Promise<T>;

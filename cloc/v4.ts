@@ -1,5 +1,4 @@
 import { ClocResults } from "../types";
-import { getExtension } from "./utils";
 
 type WorkerPoolItem = {
   id: number;
@@ -11,9 +10,8 @@ const maxWorkers = 15;
 let workerId = 0;
 
 let filesToCount = 0;
-const results = {
+const results: ClocResults = {
   countedFiles: 0,
-  countedLines: 0,
   cloc: new Map(),
 };
 
@@ -33,7 +31,6 @@ while (workerPool.length < maxWorkers) {
     const currentVal = results.cloc.get(ext) || 0;
     results.cloc.set(ext, currentVal + lines);
     results.countedFiles++;
-    results.countedLines += lines;
 
     // console.log(
     //   "Worker " +

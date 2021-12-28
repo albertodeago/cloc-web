@@ -1,5 +1,5 @@
 import { ClocResults } from "../types";
-import { getFileContent, getExtension } from "./utils";
+import { getFileContent, getExtension } from "../utils";
 
 interface ClocResultsWithPromises extends ClocResults {
   promises: Array<Promise<{ ext: string; lines: number }>>;
