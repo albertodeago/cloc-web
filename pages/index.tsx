@@ -163,7 +163,9 @@ const Home: NextPage = () => {
         <br />
         <button onClick={() => clocFileWorkers()}>Cloc file workers</button>
         <br />
-        <button onClick={() => clocV4()}>Cloc v4</button>
+        <button id="cloc-v4" onClick={() => clocV4()}>
+          Cloc v4
+        </button>
         <br />
 
         <div className="results">
