@@ -1,21 +1,64 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/home.module.css";
 import { compare, Deferred } from "../utils";
 import { run } from "../cloc";
-import { KnightRider, Title, InfoCorner, AllowMessage } from "../components";
+import { Title, InfoCorner, AllowMessage } from "../components";
 import { WorkerMessage } from "../types";
+import { motion } from "framer-motion";
 
+// main worker reference
 let worker: Worker;
+
+// directory handle
 let dirHandle: FileSystemDirectoryHandle;
+
+// timers to calculate the time it takes to CLOC
 let startTime: number = 0;
 let endTime: number = 0;
+
+// Deferred to wait for the worker to set the dirHandle on its side
 let dirHandleWorkerDeferred: Deferred<void>;
+
+const linesAnim = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: (i: number) => {
+    const delay = 1 + i * 0.5;
+    return {
+      pathLength: 1,
+      opacity: 1,
+      transition: {
+        pathLength: { delay, type: "spring", duration: 1.5, bounce: 0 },
+        opacity: { delay, duration: 0.01 },
+      },
+    };
+  },
+};
+
+const labelsAnim = {
+  hidden: { opacity: 0 },
+  visible: (i: number) => {
+    const delay = 1 + i * 0.5;
+    return {
+      opacity: 1,
+      transition: {
+        opacity: { delay, duration: 0.5 },
+      },
+    };
+  },
+};
+
+const normalize = function (val: number, max: number, min: number): number {
+  return (val - min) / (max - min);
+};
 
 const Home: NextPage = () => {
   const [countedFiles, setCountedFiles] = useState<number>(0);
   const [countedLines, setCountedLines] = useState<number>(0);
   const [counters, setCounters] = useState<Array<[string, number]>>([]);
+  const [normalizedCounters, setnormalizedCounters] = useState<
+    Array<[string, number]>
+  >([]);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
 
   const logResponse = (
@@ -131,6 +174,16 @@ const Home: NextPage = () => {
       counters.sort(compare);
       setCounters(counters);
 
+      const normalizedCounters: Array<[string, number]> = [];
+      const max = counters[0][1];
+      const limit = 99;
+      const norm = (v: number) => (limit * v) / max;
+
+      counters.forEach(([k, v]) => {
+        normalizedCounters.push([k, norm(v)]);
+      });
+      setnormalizedCounters(normalizedCounters);
+
       startTime = 0;
       endTime = 0;
     }
@@ -166,20 +219,57 @@ const Home: NextPage = () => {
         <button onClick={() => clocV4()}>Cloc v4</button>
         <br />
 
-        <div className="results">
+        <div className={styles.results}>
           {countedFiles !== 0 && countedLines !== 0 && (
             <>
               <p className="total">
                 Counted {countedFiles} files and {countedLines} lines of code in{" "}
                 {elapsedTime}ms.
               </p>
-              <ul>
+
+              {normalizedCounters.map(([ext, v], i) => (
+                <motion.span
+                  className={styles.resultsLabel}
+                  style={{
+                    top: `${20 + i * 20}px`,
+                  }}
+                  key={ext + "-label"}
+                  initial="hidden"
+                  animate="visible"
+                  variants={labelsAnim}
+                  custom={i}
+                >
+                  {ext}
+                </motion.span>
+              ))}
+
+              <motion.svg
+                width="100%"
+                height={counters.length * 30}
+                // viewBox={`0 0 100% ${counters.length * 30}`}
+                initial="hidden"
+                animate="visible"
+              >
+                {normalizedCounters.map(([ext, v], i) => (
+                  <motion.line
+                    key={ext}
+                    x1={0}
+                    x2={v + "%"}
+                    y1={i * 20 + 20}
+                    y2={i * 20 + 20}
+                    stroke="#00cc88"
+                    variants={linesAnim}
+                    custom={i}
+                  />
+                ))}
+              </motion.svg>
+              {/* <ul>
                 {counters.map((obj) => (
                   <li key={obj[0]}>
                     {obj[0]} - {obj[1]}
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </>
           )}
         </div>
