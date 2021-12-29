@@ -31,27 +31,30 @@ const Home: NextPage = () => {
     );
   };
 
-  const getDirHandle = async () => {
+  const getDirHandle = async (sendToWorker: boolean = true) => {
     const dh = await window.showDirectoryPicker();
     if (!dh) {
       alert("You must select the directory of a project");
       throw new Error("No directory selected");
     } else {
       dirHandle = dh;
-      dirHandleWorkerDeferred = new Deferred();
-      const msg: WorkerMessage = {
-        cmd: "set-dir-handle",
-        payload: dirHandle,
-      };
-      worker.postMessage(msg);
 
-      // we need to wait for the web-workers to have set the dirHandle on its side
-      await dirHandleWorkerDeferred.promise;
+      if (sendToWorker) {
+        dirHandleWorkerDeferred = new Deferred();
+        const msg: WorkerMessage = {
+          cmd: "set-dir-handle",
+          payload: dirHandle,
+        };
+        worker.postMessage(msg);
+
+        // we need to wait for the web-workers to have set the dirHandle on its side
+        await dirHandleWorkerDeferred.promise;
+      }
     }
   };
 
   const clocMainThread = async () => {
-    await getDirHandle();
+    await getDirHandle(false);
 
     startTime = performance.now();
     const results = await run(dirHandle);
@@ -61,6 +64,15 @@ const Home: NextPage = () => {
     results.cloc.forEach((v) => (totalLinesOfCode += v));
 
     logResponse(startTime, endTime, totalLinesOfCode, results.countedFiles);
+
+    setElapsedTime(Math.round(endTime - startTime));
+    setCountedFiles(results.countedFiles);
+    setCountedLines(totalLinesOfCode);
+    const counters: Array<[string, number]> = [];
+    results.cloc.forEach((v, k) => counters.push([k, v]));
+    counters.sort(compare);
+    setCounters(counters);
+
     startTime = 0;
     endTime = 0;
   };
@@ -155,7 +167,9 @@ const Home: NextPage = () => {
 
         {/* <button onClick={() => getDirHandle()}>Select project</button> */}
 
-        <button onClick={() => clocMainThread()}>Cloc main thread</button>
+        <button id="cloc-main-thread" onClick={() => clocMainThread()}>
+          Cloc main thread
+        </button>
         <br />
         <button onClick={() => clocSingleWorker()}>Cloc single worker</button>
         <br />

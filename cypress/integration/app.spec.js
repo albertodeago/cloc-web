@@ -71,7 +71,7 @@ describe("CLOC-WEB application", () => {
       },
     });
 
-    cy.get("#cloc-v4").click();
-    cy.get(".total").contains(`Counted 3 files and 6 lines of code in 200 ms`);
+    cy.get("#cloc-main-thread").click();
+    cy.get(".total").contains(`Counted 3 files and 6 lines of code in`);
   });
 });
