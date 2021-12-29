@@ -1,11 +1,14 @@
 /**
  * Compare function for sorting arrays of tuples.
  */
-export function compare(a: [string, number], b: [string, number]) {
-  if (a[1] > b[1]) {
+export function compare(
+  a: [string, string, number],
+  b: [string, string, number]
+) {
+  if (a[2] > b[2]) {
     return -1;
   }
-  if (a[1] < b[1]) {
+  if (a[2] < b[2]) {
     return 1;
   }
   return 0;

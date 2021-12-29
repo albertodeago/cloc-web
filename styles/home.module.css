@@ -8,6 +8,23 @@
   position: relative;
 }
 
+.clocButton {
+  background: black;
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 2rem auto;
+  display: block;
+  cursor: pointer;
+}
+
+.totalResults {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
 .resultsLabel {
   position: absolute;
+  font-weight: 600;
+  font-size: 0.8rem;
 }
