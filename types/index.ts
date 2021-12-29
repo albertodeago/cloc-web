@@ -2,6 +2,7 @@ import "wicg-file-system-access";
 
 export type WorkerMessage =
   | SetDirHandle
+  | DirHandleSet
   | ClocResp
   | ClocReqSingleWorker
   | ClocReqLineWorkers
@@ -11,6 +12,10 @@ export type WorkerMessage =
 type SetDirHandle = {
   cmd: "set-dir-handle";
   payload: FileSystemDirectoryHandle;
+};
+
+type DirHandleSet = {
+  cmd: "dir-handle-set";
 };
 
 type ClocResp = {

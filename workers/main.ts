@@ -13,7 +13,10 @@ self.onmessage = async function (e: MessageEvent) {
   switch (data.cmd) {
     case "set-dir-handle":
       dirHandle = data.payload;
-      // TODO: respond to let the main thread know when the worker is ready
+      const msgHandle: WorkerMessage = {
+        cmd: "dir-handle-set",
+      };
+      self.postMessage(msgHandle);
       break;
 
     case "cloc-req-single-worker":

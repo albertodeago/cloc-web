@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import styles from "../styles/home.module.css";
-import { compare } from "../utils";
+import { compare, Deferred } from "../utils";
 import { run } from "../cloc";
 import { KnightRider, Title, InfoCorner, AllowMessage } from "../components";
 import { WorkerMessage } from "../types";
@@ -10,6 +10,7 @@ let worker: Worker;
 let dirHandle: FileSystemDirectoryHandle;
 let startTime: number = 0;
 let endTime: number = 0;
+let dirHandleWorkerDeferred: Deferred<void>;
 
 const Home: NextPage = () => {
   const [countedFiles, setCountedFiles] = useState<number>(0);
@@ -36,13 +37,16 @@ const Home: NextPage = () => {
       alert("You must select the directory of a project");
       throw new Error("No directory selected");
     } else {
+      dirHandle = dh;
+      dirHandleWorkerDeferred = new Deferred();
       const msg: WorkerMessage = {
         cmd: "set-dir-handle",
         payload: dirHandle,
       };
       worker.postMessage(msg);
 
-      dirHandle = dh;
+      // we need to wait for the web-workers to have set the dirHandle on its side
+      await dirHandleWorkerDeferred.promise;
     }
   };
 
@@ -104,7 +108,10 @@ const Home: NextPage = () => {
   const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
     console.log(data);
 
-    if (data.cmd === "cloc-response") {
+    if (data.cmd === "dir-handle-set") {
+      console.log("Worker has set the dirHandle");
+      dirHandleWorkerDeferred.resolve();
+    } else if (data.cmd === "cloc-response") {
       endTime = performance.now();
       let totalLinesOfCode = 0;
       data.payload.cloc.forEach((v) => (totalLinesOfCode += v));
