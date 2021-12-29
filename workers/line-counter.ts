@@ -4,11 +4,14 @@ self.onmessage = async function (e) {
     throw new Error("[LineCounterWorker] - Unknown command: " + e.data.cmd);
   }
 
-  const fileContent = e.data.payload as string;
-  const lines = fileContent.split("\n");
+  const lines = countLines(e.data.payload as string);
 
   self.postMessage({
     cmd: "counted-lines",
-    payload: lines.length,
+    payload: lines,
   });
 };
+
+export function countLines(data: string): number {
+  return data.split("\n").length;
+}
