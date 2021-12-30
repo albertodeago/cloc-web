@@ -5,3 +5,15 @@ line {
   stroke-linecap: round;
   fill: transparent;
 }
+
+body {
+  color: black;
+  background-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: white;
+    background-color: #222;
+  }
+}
