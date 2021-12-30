@@ -4,27 +4,26 @@
   margin: 0 auto;
 }
 
-.results {
-  position: relative;
-}
-
 .clocButton {
   background: black;
   color: white;
   font-weight: 600;
   font-size: 1.2rem;
   margin: 2rem auto;
+  padding: 0.25rem 1rem;
   display: block;
   cursor: pointer;
 }
 
-.totalResults {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
+.clocButton:disabled {
+  cursor: default;
+  opacity: 0.75;
 }
 
-.resultsLabel {
-  position: absolute;
-  font-weight: 600;
-  font-size: 0.8rem;
+@media (prefers-color-scheme: dark) {
+  .clocButton {
+    background: white;
+    color: #222;
+    /* border-color: white; */
+  }
 }

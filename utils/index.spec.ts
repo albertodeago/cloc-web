@@ -3,35 +3,35 @@ import { compare, getFileContent, getExtension, Deferred } from ".";
 describe("Utils", () => {
   describe("compare", () => {
     it("should return 1 if a is less than b", () => {
-      const a: [string, number] = ["a", 1];
-      const b: [string, number] = ["b", 2];
+      const a: [string, string, number] = ["a", "a", 1];
+      const b: [string, string, number] = ["b", "b", 2];
       expect(compare(a, b)).toBe(1);
     });
 
     it("should return -1 if a is greater than b", () => {
-      const a: [string, number] = ["b", 2];
-      const b: [string, number] = ["a", 1];
+      const a: [string, string, number] = ["b", "b", 2];
+      const b: [string, string, number] = ["a", "a", 1];
       expect(compare(a, b)).toBe(-1);
     });
 
     it("should return 0 if a is equal to b", () => {
-      const a: [string, number] = ["a", 1];
-      const b: [string, number] = ["a", 1];
+      const a: [string, string, number] = ["a", "a", 1];
+      const b: [string, string, number] = ["a", "a", 1];
       expect(compare(a, b)).toBe(0);
     });
 
     it("should sort arrays of tuple in descendant mode", () => {
-      const a: Array<[string, number]> = [
-        ["rs", 1],
-        ["ts", 1000],
-        ["js", 10],
-        ["md", 50],
+      const a: Array<[string, string, number]> = [
+        ["rs", "rust", 1],
+        ["ts", "typescript", 1000],
+        ["js", "javascript", 10],
+        ["md", "markdown", 50],
       ];
       const sorted = a.sort(compare);
-      expect(sorted[0][1]).toBe(1000);
-      expect(sorted[1][1]).toBe(50);
-      expect(sorted[2][1]).toBe(10);
-      expect(sorted[3][1]).toBe(1);
+      expect(sorted[0][2]).toBe(1000);
+      expect(sorted[1][2]).toBe(50);
+      expect(sorted[2][2]).toBe(10);
+      expect(sorted[3][2]).toBe(1);
     });
   });
 

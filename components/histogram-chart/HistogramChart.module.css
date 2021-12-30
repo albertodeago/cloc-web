@@ -1,0 +1,19 @@
+.results {
+  position: relative;
+}
+
+.resultsLabel {
+  position: absolute;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.chart {
+  stroke: #357bbf;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chart {
+    stroke: #7d3eff;
+  }
+}

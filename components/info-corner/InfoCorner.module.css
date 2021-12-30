@@ -13,7 +13,54 @@
 
 .items {
   position: absolute;
-
   bottom: 20%;
   left: 20%;
+}
+
+.toggleButton {
+  position: absolute;
+  bottom: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  stroke: white;
+}
+
+.twitterIcon,
+.githubIcon,
+.infoIcon {
+  cursor: pointer;
+  position: relative;
+  stroke: black;
+  overflow: visible;
+}
+.twitterIcon {
+  top: 92px;
+  left: -92px;
+  transform: rotate(90deg);
+}
+.githubIcon {
+  top: 103px;
+  left: -55px;
+  transform: rotate(45deg);
+}
+.infoIcon {
+  top: 89px;
+  left: -3px;
+  transform: rotate(0deg);
+}
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: white;
+    color: #222;
+  }
+  .toggleButton {
+    stroke: #222;
+  }
+  .githubIcon,
+  .twitterIcon,
+  .infoIcon {
+    stroke: white;
+  }
 }

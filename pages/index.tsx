@@ -1,10 +1,17 @@
 import type { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/home.module.css";
 import { compare, Deferred } from "../utils";
 import { run } from "../cloc";
-import { Title, InfoCorner, AllowMessage, Clock } from "../components";
-import { ClocResults, WorkerMessage } from "../types";
+import {
+  Title,
+  InfoCorner,
+  AllowMessage,
+  Clock,
+  TotalResultsLabel,
+  HistogramChart,
+} from "../components";
+import { WorkerMessage } from "../types";
 import { motion } from "framer-motion";
 
 // main worker reference
@@ -19,34 +26,6 @@ let endTime: number = 0;
 
 // Deferred to wait for the worker to set the dirHandle on its side
 let dirHandleWorkerDeferred: Deferred<void>;
-
-const linesAnim = {
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: (i: number) => {
-    const delay = 1 + i * 0.5;
-    return {
-      pathLength: 1,
-      opacity: 1,
-      transition: {
-        pathLength: { delay, type: "spring", duration: 1.5, bounce: 0 },
-        opacity: { delay, duration: 0.01 },
-      },
-    };
-  },
-};
-
-const labelsAnim = {
-  hidden: { opacity: 0 },
-  visible: (i: number) => {
-    const delay = 1 + i * 0.5;
-    return {
-      opacity: 1,
-      transition: {
-        opacity: { delay, duration: 0.5 },
-      },
-    };
-  },
-};
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -90,7 +69,6 @@ const Home: NextPage = () => {
     const counters: Array<[string, string, number]> = [];
     clocRes.forEach((v, k) => {
       const total = ((v / countedLines) * 100).toFixed(2);
-      const label = `${k} - ${v} (${total}% of total)`;
       const label = `${k} - ${v.toLocaleString()} lines (${total}% of total)`;
       counters.push([k, label, v]);
     });
@@ -264,62 +242,23 @@ const Home: NextPage = () => {
 
         <div>
           {loading ? (
-            <Clock />
+            <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+              <Clock />
+            </motion.div>
           ) : (
             countedFiles !== 0 &&
             countedLines !== 0 && (
-              <>
-                <p className={styles.totalResults}>
-                  Counted <b>{countedFiles}</b> files and <b>{countedLines}</b>{" "}
-                  lines of code (in {elapsedTime}ms).
-                </p>
-
-                <div className={styles.results}>
-                  {counters.map(([ext, label, v], i) => (
-                    <motion.span
-                      className={styles.resultsLabel}
-                      style={{
-                        top: `${i * 30}px`,
-                      }}
-                      key={ext + "-label"}
-                      initial="hidden"
-                      animate="visible"
-                      variants={labelsAnim}
-                      custom={i}
-                    >
-                      {label}
-                    </motion.span>
-                  ))}
-
-                  <motion.svg
-                    width="100%"
-                    height={counters.length * 30}
-                    // viewBox={`0 0 100% ${counters.length * 30}`}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    {normalizedCounters.map(([ext, v], i) => (
-                      <motion.line
-                        key={ext}
-                        x1={0}
-                        x2={v + "%"}
-                        y1={i * 30 + 20}
-                        y2={i * 30 + 20}
-                        stroke="#00cc88"
-                        variants={linesAnim}
-                        custom={i}
-                      />
-                    ))}
-                  </motion.svg>
-                  {/* <ul>
-                {counters.map((obj) => (
-                  <li key={obj[0]}>
-                    {obj[0]} - {obj[1]}
-                  </li>
-                ))}
-              </ul> */}
-                </div>
-              </>
+              <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+                <TotalResultsLabel
+                  countedFiles={countedFiles}
+                  countedLines={countedLines}
+                  elapsedTime={elapsedTime}
+                />
+                <HistogramChart
+                  counters={counters}
+                  normalizedCounters={normalizedCounters}
+                />
+              </motion.div>
             )
           )}
         </div>
