@@ -53,3 +53,15 @@
     -webkit-transform: rotate(360deg);
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  .clock {
+    border-color: white;
+  }
+  .hours:before {
+    background: white;
+  }
+  .minutes:before {
+    background: white;
+  }
+}
