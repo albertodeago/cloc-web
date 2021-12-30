@@ -71,6 +71,14 @@ const Home: NextPage = () => {
     );
   };
 
+  const resetValues = (): void => {
+    setCountedFiles(0);
+    setCountedLines(0);
+    setCounters([]);
+    setnormalizedCounters([]);
+    setElapsedTime(0);
+  };
+
   const handleResults = (
     countedFiles: number,
     countedLines: number,
@@ -83,6 +91,7 @@ const Home: NextPage = () => {
     clocRes.forEach((v, k) => {
       const total = ((v / countedLines) * 100).toFixed(2);
       const label = `${k} - ${v} (${total}% of total)`;
+      const label = `${k} - ${v.toLocaleString()} lines (${total}% of total)`;
       counters.push([k, label, v]);
     });
     counters.sort(compare);
@@ -123,6 +132,7 @@ const Home: NextPage = () => {
 
   const clocMainThread = async () => {
     await getDirHandle();
+    resetValues();
 
     setLoading(true);
     startTime = performance.now();
@@ -140,6 +150,7 @@ const Home: NextPage = () => {
   const clocSingleWorker = async () => {
     await getDirHandle();
 
+    setLoading(true);
     const msg: WorkerMessage = {
       cmd: "cloc-req-single-worker",
     };
@@ -149,7 +160,9 @@ const Home: NextPage = () => {
 
   const clocLineWorkers = async () => {
     await getDirHandle();
+    resetValues();
 
+    setLoading(true);
     const msg: WorkerMessage = {
       cmd: "cloc-req-line-workers",
     };
@@ -159,7 +172,9 @@ const Home: NextPage = () => {
 
   const clocFileWorkers = async () => {
     await getDirHandle();
+    resetValues();
 
+    setLoading(true);
     const msg: WorkerMessage = {
       cmd: "cloc-req-file-workers",
     };
@@ -169,6 +184,7 @@ const Home: NextPage = () => {
 
   const clocV4 = async () => {
     await getDirHandle();
+    resetValues();
 
     setLoading(true);
     const msg: WorkerMessage = {
@@ -222,21 +238,30 @@ const Home: NextPage = () => {
 
         {/* <button onClick={() => getDirHandle()}>Select project</button> */}
 
-        {/* <button onClick={() => clocMainThread()}>Cloc main thread</button>
-        <br />
-        <button onClick={() => clocSingleWorker()}>Cloc single worker</button>
-        <br />
-        <button onClick={() => clocLineWorkers()}>Cloc line workers</button>
-        <br />
-        <button onClick={() => clocFileWorkers()}>Cloc file workers</button>
-        <br />
-        <button onClick={() => clocV4()}>Cloc v4</button>
-        <br /> */}
-        <button className={styles.clocButton} onClick={clocV4}>
-          CLOC of a project
+        {/* <button disabled={loading} className={styles.clocButton} onClick={clocMainThread}>
+          CLOC of a project (main thread)
+        </button>
+        <button disabled={loading} className={styles.clocButton} onClick={clocSingleWorker}>
+          CLOC of a project (single worker)
+        </button>
+        <button disabled={loading} className={styles.clocButton} onClick={clocLineWorkers}>
+          CLOC of a project (line workers)
+        </button> */}
+        <button
+          disabled={loading}
+          className={styles.clocButton}
+          onClick={clocFileWorkers}
+        >
+          CLOC of a project (file workers)
+        </button>
+        <button
+          disabled={loading}
+          className={styles.clocButton}
+          onClick={clocV4}
+        >
+          CLOC of a project (v4)
         </button>
 
-        <Clock />
         <div>
           {loading ? (
             <Clock />
