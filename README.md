@@ -124,7 +124,7 @@ ones that uses only one worker or even worse the one that runs in the main threa
 Make sure to install the dependencies
 
 ```bash
-yarn install
+npm install
 ```
 
 ## Development
@@ -132,7 +132,7 @@ yarn install
 Start the development server on http://localhost:3000
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 ## Production
@@ -140,5 +140,5 @@ yarn dev
 Build the application for production:
 
 ```bash
-yarn build
+npm run build
 ```
