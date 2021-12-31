@@ -78,3 +78,41 @@ export const toggleTheme = (value?: "light" | "dark") => {
     document.documentElement.setAttribute("data-theme", newTheme);
   }
 };
+
+type LogLevel = "none" | "info" | "warning" | "error";
+class Logger {
+  /**
+   * 0 means no logs
+   * 1 means only error
+   * 2 means error and warning
+   * 3 means error, warning and info
+   */
+  // @ts-ignore-next-line
+  private logLevel: 0 | 1 | 2 | 3;
+
+  constructor(level: LogLevel) {
+    this.setLogLevel(level);
+  }
+
+  setLogLevel(level: LogLevel) {
+    this.logLevel =
+      level === "none"
+        ? 0
+        : level === "error"
+        ? 1
+        : level === "warning"
+        ? 2
+        : 3;
+  }
+
+  info(message: string) {
+    if (this.logLevel >= 3) console.info(message);
+  }
+  warning(message: string) {
+    if (this.logLevel >= 2) console.warn(message);
+  }
+  error(message: string) {
+    if (this.logLevel >= 1) console.error(message);
+  }
+}
+export const logger = new Logger("error");

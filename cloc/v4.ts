@@ -1,66 +1,88 @@
 import { ClocResults } from "../types";
+import { logger } from "../utils";
 
 type WorkerPoolItem = {
   id: number;
-  status: "free";
   worker: Worker;
 };
-const workerPool: Array<WorkerPoolItem> = [];
-const maxWorkers = 15;
-let workerId = 0;
+let workerPool: Array<WorkerPoolItem> = [];
+let maxWorkers: number;
+let workerId: number;
 
-let filesToCount = 0;
+let filesToCount: number;
 const results: ClocResults = {
   countedFiles: 0,
   cloc: new Map(),
 };
 
-while (workerPool.length < maxWorkers) {
-  const worker = new Worker(
-    new URL("../workers/file-counter-v4.ts", import.meta.url)
-  );
-  workerPool.push({
-    id: workerId,
-    status: "free",
-    worker,
-  });
-
-  worker.onmessage = (e) => {
-    const { id, ext, lines } = e.data.payload;
-
-    const currentVal = results.cloc.get(ext) || 0;
-    results.cloc.set(ext, currentVal + lines);
-    results.countedFiles++;
-
-    // console.log(
-    //   "Worker " +
-    //     id +
-    //     " counted a file [" +
-    //     ext +
-    //     "]: " +
-    //     lines +
-    //     ". Still need to count " +
-    //     (filesToCount - results.countedFiles)
-    // );
-
-    if (results.countedFiles === filesToCount) {
-      console.log("\nAll files counted");
-      console.log(results);
-
-      const msgv4 = {
-        cmd: "cloc-response",
-        payload: results,
-      };
-      self.postMessage(msgv4);
-    }
-  };
-
-  workerId++;
-}
-
-let counter = 0;
-let firstRun = false;
+let counter: number;
+let firstRun: boolean;
 const firstDelay = 350;
+
+/**
+ * set/reset values at the initial stage. This must be done before
+ * starting to count files
+ */
+const initValues = (numOfWorkers: number) => {
+  // reset workers
+  workerPool.forEach((item) => item.worker.terminate());
+  workerPool = [];
+  maxWorkers = numOfWorkers;
+  workerId = 0;
+
+  // reset values for results
+  filesToCount = 0;
+  results.countedFiles = 0;
+  results.cloc.clear();
+
+  // reset stuff for the sendMessage function
+  counter = 0;
+  firstRun = false;
+};
+
+/**
+ * Create the workers and set listeners
+ */
+const createWorkers = () => {
+  logger.info(`Creating ${maxWorkers} workers`);
+  while (workerPool.length < maxWorkers) {
+    const worker = new Worker(
+      new URL("../workers/file-counter-v4.ts", import.meta.url)
+    );
+    workerPool.push({
+      id: workerId,
+      worker,
+    });
+
+    worker.onmessage = (e) => {
+      const { id, ext, lines } = e.data.payload;
+      logger.info(`Worker ${id} finished counting ${ext}. ${lines} lines`);
+
+      const currentVal = results.cloc.get(ext) || 0;
+      results.cloc.set(ext, currentVal + lines);
+      results.countedFiles++;
+
+      if (results.countedFiles === filesToCount) {
+        logger.info(
+          `\nAll ${filesToCount} files have been counted, returning results to main thread`
+        );
+
+        const msgv4 = {
+          cmd: "cloc-response",
+          payload: results,
+        };
+        self.postMessage(msgv4);
+      }
+    };
+
+    workerId++;
+  }
+};
+
+/**
+ * Send a message to a workers.
+ * The workers is choseen in a round robin fashion.
+ */
 const sendMessage = async function (
   handleName: string,
   fsHandle: FileSystemFileHandle
@@ -96,18 +118,18 @@ const cloc = async function (
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     if (fsHandle.kind === "directory") {
       if (!dirBlackList.includes(handleName)) {
-        // console.log(`dir ${handleName} found`);
+        logger.info(`Directory ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
       } else {
-        // console.log(`dir ${handleName} skipped`);
+        logger.info(`Directory ${handleName} skipped`);
       }
     } else {
       if (!fileBlackList.includes(handleName)) {
-        // console.log(`file ${handleName} found`);
+        logger.info(`File ${handleName} found`);
         filesToCount++;
         sendMessage(handleName, fsHandle);
       } else {
-        // console.log(`file ${handleName} skipped`);
+        logger.info(`File ${handleName} skipped`);
       }
     }
   }
@@ -115,6 +137,7 @@ const cloc = async function (
 
 const v4 = async function (dirHandle: FileSystemDirectoryHandle) {
   const dirBlackList = [
+  const _dirBlackList = [
     ".svn",
     ".cvs",
     ".hg",
@@ -125,12 +148,15 @@ const v4 = async function (dirHandle: FileSystemDirectoryHandle) {
     "node_modules",
   ];
 
+  logger.setLogLevel(isLogActive ? "info" : "error");
+  initValues(numOfWorkers);
+  createWorkers();
   // files to ignore, usually these are files that users don't want to count
   const fileBlackList = ["package-lock.json", "yarn.lock", ".gitignore"];
 
-  await cloc(dirHandle, results, dirBlackList, fileBlackList);
+  await cloc(dirHandle, results, _dirBlackList, fileBlackList);
 
-  console.log("\nAll messages sent, now waiting for workers");
+  logger.info("All messages sent to other workers, now waiting for results");
 };
 
 export { v4 };

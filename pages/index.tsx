@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
-import React, { useEffect, useState, useRef } from "react";
+import Head from "next/head";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/home.module.css";
 import { compare, Deferred } from "../utils";
 import { run } from "../cloc";
