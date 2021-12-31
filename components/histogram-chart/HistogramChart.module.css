@@ -9,11 +9,5 @@
 }
 
 .chart {
-  stroke: #357bbf;
-}
-
-@media (prefers-color-scheme: dark) {
-  .chart {
-    stroke: #7d3eff;
-  }
+  stroke: var(--accent-color);
 }

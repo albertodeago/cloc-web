@@ -22,7 +22,7 @@
   left: 37%;
 
   font-size: 1.75rem;
-  color: grey;
+  color: var(--accent-color);
 
   /* force vertical text (but centered) */
   width: 1ch;

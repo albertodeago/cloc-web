@@ -1,0 +1,45 @@
+/* automatic default mode */
+:root {
+  --dark-color: #222;
+  --light-color: #fff;
+  --black-color: #000;
+  --accent-color: #357bbf;
+
+  --glow-color: rgba(34, 34, 34, 1);
+  --invert-glow: rgba(255, 255, 255, 1);
+}
+
+/* automatic light mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --dark-color: #fff;
+    --light-color: #222;
+    --black-color: #fff;
+    --accent-color: #7d3eff;
+
+    --glow-color: rgba(255, 255, 255, 1);
+    --invert-glow: rgba(34, 34, 34, 1);
+  }
+}
+
+/* manual light mode */
+[data-theme="light"] {
+  --dark-color: #222;
+  --light-color: #fff;
+  --black-color: #000;
+  --accent-color: #357bbf;
+
+  --glow-color: rgba(34, 34, 34, 1);
+  --invert-glow: rgba(255, 255, 255, 1);
+}
+
+/* manual dark mode */
+[data-theme="dark"] {
+  --dark-color: #fff;
+  --light-color: #222;
+  --black-color: #fff;
+  --accent-color: #7d3eff;
+
+  --glow-color: rgba(255, 255, 255, 1);
+  --invert-glow: rgba(34, 34, 34, 1);
+}

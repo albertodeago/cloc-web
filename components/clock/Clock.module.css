@@ -5,7 +5,7 @@
   width: 50px;
   height: 50px;
   border-radius: 30px;
-  border: solid 5px black;
+  border: solid 5px var(--black-color);
 }
 
 .hours {
@@ -22,7 +22,7 @@
   width: 16px;
   position: absolute;
   right: 11px;
-  background: black;
+  background: var(--black-color);
   border-radius: 5px;
 }
 
@@ -41,7 +41,7 @@
   width: 22px;
   position: absolute;
   right: 5px;
-  background: black;
+  background: var(--black-color);
   border-radius: 5px;
 }
 
@@ -51,17 +51,5 @@
   }
   100% {
     -webkit-transform: rotate(360deg);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .clock {
-    border-color: white;
-  }
-  .hours:before {
-    background: white;
-  }
-  .minutes:before {
-    background: white;
   }
 }

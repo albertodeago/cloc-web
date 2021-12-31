@@ -5,11 +5,13 @@ import { compare, Deferred } from "../utils";
 import { run } from "../cloc";
 import {
   Title,
+  Button,
   InfoCorner,
   AllowMessage,
   Clock,
   TotalResultsLabel,
   HistogramChart,
+  ThemeToggle,
 } from "../components";
 import { WorkerMessage } from "../types";
 import { motion } from "framer-motion";
@@ -207,9 +209,27 @@ const Home: NextPage = () => {
 
   return (
     <div>
+      <Head>
+        <title>CLOC-web</title>
+        {/* Inject a script to avoid theme flashing when user saved dark theme as its preference */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+            let theme = localStorage.getItem("theme");
+            if (theme !== "light" && theme !== "dark") {
+              theme = undefined;
+            }
+            if (theme) {
+              document.documentElement.setAttribute("data-theme", theme);
+            }
+            `,
+          }}
+        ></script>
+      </Head>
       <InfoCorner />
       <Title />
-      {/* <KnightRider /> */}
+      <ThemeToggle />
 
       <main className={styles.mainContent}>
         <AllowMessage />
@@ -225,20 +245,17 @@ const Home: NextPage = () => {
         <button disabled={loading} className={styles.clocButton} onClick={clocLineWorkers}>
           CLOC of a project (line workers)
         </button> */}
-        <button
+        <Button
           disabled={loading}
-          className={styles.clocButton}
           onClick={clocFileWorkers}
-        >
-          CLOC of a project (file workers)
-        </button>
-        <button
+          text="CLOC of a project (file workers)"
+        />
+        <Button
           disabled={loading}
-          className={styles.clocButton}
           onClick={clocV4}
+          text=" CLOC of a project (v4)"
+        />
         >
-          CLOC of a project (v4)
-        </button>
 
         <div>
           {loading ? (

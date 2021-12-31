@@ -1,0 +1,48 @@
+.clocButton {
+  font-size: 1rem;
+  display: block;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  margin: 2rem auto;
+  position: relative;
+  z-index: 1;
+}
+.clocButton:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+.clocButton:not(:disabled):hover .clocButtonText {
+  color: var(--light-color);
+}
+.clocButton:not(:disabled):hover .clocButtonFill {
+  width: 130%;
+}
+.clocButtonWrapper {
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--light-color);
+  padding: 10px 20px;
+  border: 3px solid var(--dark-color);
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+.clocButtonFill {
+  position: absolute;
+  width: 0;
+  height: 100%;
+  left: -20px;
+  top: 0;
+  background-color: var(--dark-color);
+  transition: width 0.25s ease-out;
+  transform: skew(30deg);
+}
+.clocButtonText {
+  font-weight: 600;
+  color: var(--dark-color);
+  position: relative;
+  z-index: 4;
+  transition: color 0.35s ease-in;
+}

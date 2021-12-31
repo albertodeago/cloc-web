@@ -6,8 +6,8 @@
   right: calc(var(--dimension) / 2 * -1);
   width: var(--dimension);
   height: var(--dimension);
-  background-color: black;
-  color: white;
+  background-color: var(--black-color);
+  color: var(--light-color);
   border-radius: 50%;
 }
 
@@ -23,7 +23,7 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  stroke: white;
+  stroke: var(--light-color);
 }
 
 .twitterIcon,
@@ -31,7 +31,7 @@
 .infoIcon {
   cursor: pointer;
   position: relative;
-  stroke: black;
+  stroke: var(--black-color);
   overflow: visible;
 }
 .twitterIcon {
@@ -48,19 +48,4 @@
   top: 89px;
   left: -3px;
   transform: rotate(0deg);
-}
-
-@media (prefers-color-scheme: dark) {
-  .container {
-    background-color: white;
-    color: #222;
-  }
-  .toggleButton {
-    stroke: #222;
-  }
-  .githubIcon,
-  .twitterIcon,
-  .infoIcon {
-    stroke: white;
-  }
 }

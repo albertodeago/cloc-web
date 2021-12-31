@@ -64,3 +64,17 @@ export class Deferred<T> {
     this._reject(reason);
   }
 }
+
+/**
+ * Toggle (or set) the theme on the document
+ */
+export const toggleTheme = (value?: "light" | "dark") => {
+  if (value) {
+    document.documentElement.setAttribute("data-theme", value);
+  } else {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  }
+};

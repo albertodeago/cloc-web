@@ -3,27 +3,3 @@
   max-width: 900px;
   margin: 0 auto;
 }
-
-.clocButton {
-  background: black;
-  color: white;
-  font-weight: 600;
-  font-size: 1.2rem;
-  margin: 2rem auto;
-  padding: 0.25rem 1rem;
-  display: block;
-  cursor: pointer;
-}
-
-.clocButton:disabled {
-  cursor: default;
-  opacity: 0.75;
-}
-
-@media (prefers-color-scheme: dark) {
-  .clocButton {
-    background: white;
-    color: #222;
-    /* border-color: white; */
-  }
-}

@@ -7,13 +7,20 @@ line {
 }
 
 body {
-  color: black;
-  background-color: white;
+  color: var(--black-color);
+  background-color: var(--light-color);
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    color: white;
-    background-color: #222;
-  }
+/* toggle theme animation */
+* {
+  transition: background-color 0.3s ease-out;
+}
+
+a {
+  color: var(--accent-color);
+  opacity: 0.8;
+  transition: opacity 0.3s ease-out;
+}
+a:hover {
+  opacity: 1;
 }
