@@ -5,8 +5,6 @@ interface ClocResultsWithPromises extends ClocResults {
   promises: Array<Promise<{ ext: string; lines: number }>>;
 }
 
-// Deferred.Promise = Promise;
-
 type WorkerPoolItem = {
   id: number;
   status: "free" | "busy";

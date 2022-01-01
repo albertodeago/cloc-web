@@ -14,6 +14,7 @@ const MenuToggle = ({ toggle }: { toggle: Function }) => (
   <motion.button
     whileHover={{ scale: 1.1 }}
     className={styles.toggleButton}
+    // @ts-ignore-next-line
     onClick={toggle}
   >
     <svg width="30" height="30" viewBox="0 0 23 23">
@@ -72,7 +73,11 @@ export function InfoCorner() {
           <MenuToggle toggle={() => toggle()} />
 
           {/* twitter icon */}
-          <a href="https://twitter.com/albertodeago88" target="_blank">
+          <a
+            href="https://twitter.com/albertodeago88"
+            target="_blank"
+            rel="noreferrer"
+          >
             <svg
               className={styles.twitterIcon}
               width="40px"
@@ -91,7 +96,11 @@ export function InfoCorner() {
           </a>
 
           {/* github icon */}
-          <a href="https://github.com/albertodeago/cloc-web" target="_blank">
+          <a
+            href="https://github.com/albertodeago/cloc-web"
+            rel="noreferrer"
+            target="_blank"
+          >
             <svg
               className={styles.githubIcon}
               width="40px"

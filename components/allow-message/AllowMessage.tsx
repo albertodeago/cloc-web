@@ -4,7 +4,11 @@ export function AllowMessage() {
   return (
     <p className={styles.text}>
       This application makes use of the{" "}
-      <a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API">
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API"
+        target="_blank"
+        rel="noreferrer"
+      >
         File System Access API
       </a>{" "}
       to allow the user to select the project to CLOC of. You will be prompted
