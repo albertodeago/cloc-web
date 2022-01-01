@@ -5,12 +5,17 @@ self.onmessage = async function (e) {
     throw new Error("[FileCounterWorker] - Unknown command: " + e.data.cmd);
   }
 
-  const fileHandle = e.data.payload;
-  const fileContent = await getFileContent(fileHandle);
-  const lines = fileContent.split("\n");
+  const lines = await countLines(e.data.payload);
 
   self.postMessage({
     cmd: "counted-file",
-    payload: lines.length,
+    payload: lines,
   });
 };
+
+export async function countLines(
+  fileHandle: FileSystemFileHandle
+): Promise<number> {
+  const fileContent = await getFileContent(fileHandle);
+  return fileContent.split("\n").length;
+}
