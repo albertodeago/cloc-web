@@ -1,5 +1,6 @@
 import { WorkerMessage } from "../types";
 import { run } from "../cloc";
+import { logger } from "../utils";
 import { runWithLineCounters } from "../cloc/with-line-counter";
 import { runWithFileCounters } from "../cloc/with-file-counter";
 import { v4 } from "../cloc/v4";
@@ -8,11 +9,12 @@ let dirHandle: FileSystemDirectoryHandle | null = null;
 
 self.onmessage = async function (e: MessageEvent) {
   let data = e.data as WorkerMessage;
-  console.log(`[worker]: ${data.cmd}`);
+  logger.info(`[MainWorker] Message ${data.cmd} received`);
 
   switch (data.cmd) {
     case "set-dir-handle":
       dirHandle = data.payload;
+      logger.info(`[MainWorker] Dirrectory handle set`);
       const msgHandle: WorkerMessage = {
         cmd: "dir-handle-set",
       };
@@ -24,6 +26,8 @@ self.onmessage = async function (e: MessageEvent) {
       if (!dirHandle) {
         throw new Error("dirHandle is null");
       }
+
+      logger.info(`[MainWorker] Running cloc on this MainWorker`);
 
       const results = await run(dirHandle);
       const msg: WorkerMessage = {

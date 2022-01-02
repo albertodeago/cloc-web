@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import styles from "../styles/home.module.css";
-import { compare, Deferred } from "../utils";
+import { compare, Deferred, logger } from "../utils";
 import { run } from "../cloc";
 import {
   Title,
@@ -30,6 +30,19 @@ let endTime: number = 0;
 // Deferred to wait for the worker to set the dirHandle on its side
 let dirHandleWorkerDeferred: Deferred<void>;
 
+const logResponse = (
+  startTime: number,
+  endTime: number,
+  totalLinesOfCode: number,
+  countedFiles: number
+): void => {
+  logger.info(
+    `Successfully CLOC project. Took ${
+      endTime - startTime
+    } milliseconds.\nCounted a total of ${countedFiles} files.\nCounted a total of ${totalLinesOfCode} lines of code`
+  );
+};
+
 const Home: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [countedFiles, setCountedFiles] = useState<number>(0);
@@ -40,18 +53,6 @@ const Home: NextPage = () => {
   >([]);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
 
-  const logResponse = (
-    startTime: number,
-    endTime: number,
-    totalLinesOfCode: number,
-    countedFiles: number
-  ): void => {
-    console.log(
-      `Successfully CLOC project. Took ${
-        endTime - startTime
-      } milliseconds.\nCounted a total of ${countedFiles} files.\nCounted a total of ${totalLinesOfCode} lines of code`
-    );
-  };
 
   const resetValues = (): void => {
     setCountedFiles(0);
@@ -96,8 +97,9 @@ const Home: NextPage = () => {
     const dh = await window.showDirectoryPicker();
     if (!dh) {
       alert("You must select the directory of a project");
-      throw new Error("No directory selected");
+      return;
     } else {
+      logger.info("[MainThread] Directory handle received");
       dirHandle = dh;
       dirHandleWorkerDeferred = new Deferred();
       const msg: WorkerMessage = {
@@ -172,14 +174,17 @@ const Home: NextPage = () => {
       cmd: "cloc-req-v4",
     };
     startTime = performance.now();
+
+    logger.info("[MainThread] Sending CLOC request to main worker");
     worker.postMessage(msg);
   };
 
   const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
     if (data.cmd === "dir-handle-set") {
-      console.log("Worker has set the dirHandle");
+      logger.info("[MainThread] Directory handle set on worker side");
       dirHandleWorkerDeferred.resolve();
     } else if (data.cmd === "cloc-response") {
+      logger.info("[MainThread] CLOC response received");
       endTime = performance.now();
       let totalLinesOfCode = 0;
       data.payload.cloc.forEach((v) => (totalLinesOfCode += v));
