@@ -1,5 +1,6 @@
 export * from "./title/Title";
 export * from "./button/Button";
+export * from "./checkbox/Checkbox";
 export * from "./info-corner/InfoCorner";
 export * from "./allow-message/AllowMessage";
 export * from "./clock/Clock";

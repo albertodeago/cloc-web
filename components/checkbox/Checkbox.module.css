@@ -1,0 +1,49 @@
+.checkbox {
+  --checkbox-size: 1.5rem;
+  --checkbox-border-size: 2px;
+  --checkbox-border-radius: 3px;
+}
+
+/* label AND container of input and label */
+.checkbox__label {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+/* actual input (we hide it and leave just a border) */
+.checkbox__input {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none; /* TODO: manage :focus */
+  border: var(--checkbox-border-size) solid var(--dark-color);
+  border-radius: var(--checkbox-border-radius);
+  cursor: pointer;
+  margin-right: 0.75rem;
+  transition: border-color 0.2s ease-in-out;
+}
+.checkbox__input:checked {
+  border-color: var(--accent-color);
+}
+
+/* inner square */
+.checkbox__input::before {
+  content: " ";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background: transparent;
+  border-radius: var(--checkbox-border-radius);
+  transition: background-color 0.2s ease-in-out;
+}
+.checkbox__input:checked::before {
+  background-color: var(--accent-color);
+}
