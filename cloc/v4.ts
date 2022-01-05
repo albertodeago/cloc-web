@@ -135,26 +135,18 @@ const cloc = async function (
   }
 };
 
-const v4 = async function (dirHandle: FileSystemDirectoryHandle) {
-  const dirBlackList = [
-  const _dirBlackList = [
-    ".svn",
-    ".cvs",
-    ".hg",
-    ".git",
-    ".bzr",
-    ".snapshot",
-    ".config",
-    "node_modules",
-  ];
-
+const v4 = async function (
+  dirHandle: FileSystemDirectoryHandle,
+  numOfWorkers: number,
+  fileIgnoreList: string[],
+  dirIgnoreList: string[],
+  isLogActive: boolean
+) {
   logger.setLogLevel(isLogActive ? "info" : "error");
   initValues(numOfWorkers);
   createWorkers();
-  // files to ignore, usually these are files that users don't want to count
-  const fileBlackList = ["package-lock.json", "yarn.lock", ".gitignore"];
 
-  await cloc(dirHandle, results, _dirBlackList, fileBlackList);
+  await cloc(dirHandle, results, dirIgnoreList, fileIgnoreList);
 
   logger.info("All messages sent to other workers, now waiting for results");
 };

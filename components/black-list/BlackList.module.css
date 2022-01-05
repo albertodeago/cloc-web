@@ -1,0 +1,45 @@
+.inputWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.addButton,
+.removeButton {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.addButton:hover,
+.removeButton:hover {
+  transform: scale(1.2);
+}
+
+.addButton > svg,
+.removeButton > svg {
+  fill: var(--dark-color);
+}
+
+.removeButton > svg {
+  transform: rotate(45deg);
+}
+
+.list {
+  padding: 0;
+  margin-bottom: 1rem;
+}
+.listItem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 2px 0 2px 5px;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+}

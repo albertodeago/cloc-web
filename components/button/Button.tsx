@@ -3,7 +3,7 @@ import styles from "./Button.module.css";
 type ButtonProps = {
   onClick: () => void;
   text: string;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 export function Button({ onClick, text, disabled }: ButtonProps) {

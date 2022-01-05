@@ -3,3 +3,10 @@
   max-width: 900px;
   margin: 0 auto;
 }
+
+.buttonWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

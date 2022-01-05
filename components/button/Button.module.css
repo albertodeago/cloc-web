@@ -4,7 +4,7 @@
   cursor: pointer;
   background: transparent;
   border: none;
-  margin: 2rem auto;
+  margin: 2rem 0;
   position: relative;
   z-index: 1;
 }

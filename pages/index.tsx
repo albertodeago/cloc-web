@@ -5,14 +5,21 @@ import styles from "../styles/home.module.css";
 import { compare, Deferred, logger } from "../utils";
 import { run } from "../cloc";
 import {
+  fileDefaultIgnoreList,
+  dirDefaultIgnoreList,
+} from "../cloc/ignoreList";
+import {
   Title,
   Button,
+  Checkbox,
+  SettingsIcon,
   InfoCorner,
   AllowMessage,
   Clock,
   TotalResultsLabel,
   HistogramChart,
   ThemeToggle,
+  BlackList,
 } from "../components";
 import { WorkerMessage } from "../types";
 import { motion } from "framer-motion";
@@ -53,6 +60,18 @@ const Home: NextPage = () => {
   >([]);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
 
+  const [isOpened, setIsOpened] = useState<boolean>(false);
+
+  const [numOfWorkers, setNumOfWorkers] = useState<number>(8);
+  const [fileBlackList, setFileBlackList] = useState<string[]>([
+    ...fileDefaultIgnoreList,
+  ]);
+  const [dirBlackList, setDirBlackList] = useState<string[]>([
+    ...dirDefaultIgnoreList,
+  ]);
+  const [isLogActive, setIsLogActive] = useState<boolean>(false);
+
+  console.log("HOME PAGE RENDERING"); // TODO: remove this
 
   const resetValues = (): void => {
     setCountedFiles(0);
@@ -172,6 +191,12 @@ const Home: NextPage = () => {
     setLoading(true);
     const msg: WorkerMessage = {
       cmd: "cloc-req-v4",
+      payload: {
+        numOfWorkers: numOfWorkers,
+        isLogActive: isLogActive,
+        fileIgnoreList: fileBlackList,
+        dirIgnoreList: dirBlackList,
+      },
     };
     startTime = performance.now();
 
@@ -213,6 +238,17 @@ const Home: NextPage = () => {
     }
   }, []);
 
+  const variants = {
+    expanded: {
+      opacity: 1,
+      height: "auto",
+    },
+    collapsed: {
+      opacity: 0,
+      height: 0,
+    },
+  };
+
   return (
     <div>
       <Head>
@@ -251,17 +287,68 @@ const Home: NextPage = () => {
         <button disabled={loading} className={styles.clocButton} onClick={clocLineWorkers}>
           CLOC of a project (line workers)
         </button> */}
-        <Button
+        {/* <Button
           disabled={loading}
           onClick={clocFileWorkers}
           text="CLOC of a project (file workers)"
-        />
-        <Button
-          disabled={loading}
-          onClick={clocV4}
-          text=" CLOC of a project (v4)"
-        />
+        /> */}
+        <div className={styles.buttonWrapper}>
+          <Button
+            disabled={loading}
+            onClick={clocV4}
+            text=" CLOC of a project (v4)"
+          />
+          <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />
+        </div>
+
+        <motion.div
+          layout
+          variants={variants}
+          initial="collapsed"
+          animate={isOpened ? "expanded" : "collapsed"}
+          style={{
+            // backgroundColor: "salmon",
+            overflow: "hidden",
+          }}
         >
+          <div>
+            <input
+              type="range"
+              id="numWorkers"
+              name="numWorkers"
+              min="0"
+              max="40"
+              value={numOfWorkers}
+              onChange={(e) => setNumOfWorkers(parseInt(e.target.value))}
+            />
+            <label htmlFor="numWorkers">
+              Number of workers <b>{numOfWorkers}</b>
+              {numOfWorkers === 0 ? (
+                <span> (0 means CLOC in main thread)</span>
+              ) : (
+                <> </>
+              )}
+            </label>
+          </div>
+
+          <Checkbox
+            isChecked={isLogActive}
+            setChecked={(e) => setIsLogActive(!isLogActive)}
+            text="Activate logs (on console)"
+          />
+
+          <BlackList
+            type="file"
+            list={fileBlackList}
+            setList={setFileBlackList}
+          />
+
+          <BlackList
+            type="directory"
+            list={dirBlackList}
+            setList={setDirBlackList}
+          />
+        </motion.div>
 
         <div>
           {loading ? (

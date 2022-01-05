@@ -76,7 +76,9 @@ self.onmessage = async function (e: MessageEvent) {
       // When all the worker ends their job send data to the main thread. To check when the job is done he just increase a counter
       // every time he find a new file to count, and increase another counter when a worker returns the results. When both are equal
       // we're done.
-      v4(dirHandle);
+      const { numOfWorkers, fileIgnoreList, dirIgnoreList, isLogActive } =
+        data.payload;
+      v4(dirHandle, numOfWorkers, fileIgnoreList, dirIgnoreList, isLogActive);
       break;
 
     default:
