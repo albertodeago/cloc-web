@@ -74,6 +74,7 @@ export function InfoCorner() {
 
           {/* twitter icon */}
           <a
+            className={isOpen ? styles.link : styles.linkHidden}
             href="https://twitter.com/albertodeago88"
             target="_blank"
             rel="noreferrer"
@@ -97,6 +98,7 @@ export function InfoCorner() {
 
           {/* github icon */}
           <a
+            className={isOpen ? styles.link : styles.linkHidden}
             href="https://github.com/albertodeago/cloc-web"
             rel="noreferrer"
             target="_blank"

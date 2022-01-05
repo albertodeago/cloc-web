@@ -26,6 +26,13 @@
   stroke: var(--light-color);
 }
 
+.link {
+}
+.linkHidden {
+  cursor: default;
+  pointer-events: none;
+}
+
 .twitterIcon,
 .githubIcon,
 .infoIcon {
