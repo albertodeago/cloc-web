@@ -1,5 +1,5 @@
 import { ClocResults } from "../types";
-import { getExtension, getFileContent } from "../utils";
+import { getExtension, getFileContent, logger } from "../utils";
 
 const cloc = async function (
   dirHandle: FileSystemDirectoryHandle,
@@ -8,18 +8,16 @@ const cloc = async function (
   fileBlackList: Array<string>
 ) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
-    // console.log({ handleName, fsHandle });
-
     if (fsHandle.kind === "directory") {
       if (!dirBlackList.includes(handleName)) {
-        // console.log(`dir ${handleName} found`);
+        logger.info(`Directory ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
       } else {
-        // console.log(`dir ${handleName} skipped`);
+        logger.info(`Directory ${handleName} skipped`);
       }
     } else {
       if (!fileBlackList.includes(handleName)) {
-        // console.log(`file ${handleName} found`);
+        logger.info(`File ${handleName} found`);
         results.countedFiles++;
 
         const ext = getExtension(handleName);
@@ -29,41 +27,26 @@ const cloc = async function (
         const amounfPerExt = results.cloc.get(ext) || 0;
         results.cloc.set(ext, amounfPerExt + lines.length);
       } else {
-        // console.log(`file ${handleName} skipped`);
+        logger.info(`File ${handleName} skipped`);
       }
     }
   }
 };
 
 const run = async function (
-  dirHandle: FileSystemDirectoryHandle
+  dirHandle: FileSystemDirectoryHandle,
+  fileIgnoreList: string[],
+  dirIgnoreList: string[],
+  isLogActive: boolean
 ): Promise<ClocResults> {
-  // directories to ignore, usually these contains files that users don't want to count
-  const dirBlackList = [
-    ".svn",
-    ".cvs",
-    ".hg",
-    ".git",
-    ".bzr",
-    ".snapshot",
-    ".config",
-    "node_modules",
-  ];
-
-  // files to ignore, usually these are files that users don't want to count
-  const fileBlackList = ["package-lock.json", "yarn.lock", ".gitignore"];
-
+  logger.setLogLevel(isLogActive ? "info" : "error");
+  console.log(dirIgnoreList, fileIgnoreList);
   const results: ClocResults = {
     countedFiles: 0,
     cloc: new Map(),
   };
 
-  await cloc(dirHandle, results, dirBlackList, fileBlackList);
-
-  console.log("\n\nWork finished");
-  for (const [ext, amount] of results.cloc) {
-    console.log(`${ext}: ${amount}`);
-  }
+  await cloc(dirHandle, results, dirIgnoreList, fileIgnoreList);
 
   return results;
 };

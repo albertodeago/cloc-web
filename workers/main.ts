@@ -1,4 +1,4 @@
-import { WorkerMessage } from "../types";
+import { WorkerMessage, WorkerConfiguration } from "../types";
 import { run } from "../cloc";
 import { logger } from "../utils";
 import { runWithLineCounters } from "../cloc/with-line-counter";
@@ -6,6 +6,17 @@ import { runWithFileCounters } from "../cloc/with-file-counter";
 import { v4 } from "../cloc/v4";
 
 let dirHandle: FileSystemDirectoryHandle | null = null;
+let numOfWorkers: number;
+let fileIgnoreList: string[];
+let dirIgnoreList: string[];
+let isLogActive: boolean;
+
+const initConfiguration = (payload: WorkerConfiguration) => {
+  numOfWorkers = payload.numOfWorkers;
+  fileIgnoreList = payload.fileIgnoreList;
+  dirIgnoreList = payload.dirIgnoreList;
+  isLogActive = payload.isLogActive;
+};
 
 self.onmessage = async function (e: MessageEvent) {
   let data = e.data as WorkerMessage;
@@ -76,8 +87,7 @@ self.onmessage = async function (e: MessageEvent) {
       // When all the worker ends their job send data to the main thread. To check when the job is done he just increase a counter
       // every time he find a new file to count, and increase another counter when a worker returns the results. When both are equal
       // we're done.
-      const { numOfWorkers, fileIgnoreList, dirIgnoreList, isLogActive } =
-        data.payload;
+      initConfiguration(data.payload);
       v4(dirHandle, numOfWorkers, fileIgnoreList, dirIgnoreList, isLogActive);
       break;
 

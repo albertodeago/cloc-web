@@ -59,10 +59,6 @@ const variants = {
   }),
 };
 
-/*
-Quarto di cerchio in alto a DX con le 3 icone.
-Github Twitter e Info su come funziona l'app (forse anche articolo)
-*/
 export function InfoCorner() {
   const [isOpen, toggle] = useCycle(false, true);
 

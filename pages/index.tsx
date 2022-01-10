@@ -138,7 +138,12 @@ const Home: NextPage = () => {
 
     setLoading(true);
     startTime = performance.now();
-    const results = await run(dirHandle);
+    const results = await run(
+      dirHandle,
+      dirBlackList,
+      fileBlackList,
+      isLogActive
+    );
     endTime = performance.now();
 
     let totalLinesOfCode = 0;
@@ -202,6 +207,14 @@ const Home: NextPage = () => {
 
     logger.info("[MainThread] Sending CLOC request to main worker");
     worker.postMessage(msg);
+  };
+
+  const cloc = async () => {
+    if (numOfWorkers === 0) {
+      await clocMainThread();
+    } else {
+      await clocFileWorkers();
+    }
   };
 
   const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
@@ -295,7 +308,7 @@ const Home: NextPage = () => {
         <div className={styles.buttonWrapper}>
           <Button
             disabled={loading}
-            onClick={clocV4}
+            onClick={cloc}
             text=" CLOC of a project (v4)"
           />
           <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />

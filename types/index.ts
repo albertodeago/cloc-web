@@ -33,16 +33,19 @@ type ClocReqLineWorkers = {
 
 type ClocReqFileWorkers = {
   cmd: "cloc-req-file-workers";
+  payload: WorkerConfiguration;
 };
 
 type ClocReqV4 = {
   cmd: "cloc-req-v4";
-  payload: {
-    numOfWorkers: number;
-    fileIgnoreList: string[];
-    dirIgnoreList: string[];
-    isLogActive: boolean;
-  };
+  payload: WorkerConfiguration;
+};
+
+export type WorkerConfiguration = {
+  numOfWorkers: number;
+  fileIgnoreList: string[];
+  dirIgnoreList: string[];
+  isLogActive: boolean;
 };
 
 export type ClocResults = {
