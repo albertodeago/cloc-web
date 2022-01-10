@@ -1,4 +1,5 @@
 .icon {
   display: inline-block;
   cursor: pointer;
+  fill: var(--black-color);
 }

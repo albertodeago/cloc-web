@@ -20,6 +20,7 @@ import {
   HistogramChart,
   ThemeToggle,
   BlackList,
+  InputRange,
 } from "../components";
 import { WorkerMessage } from "../types";
 import { motion } from "framer-motion";
@@ -310,6 +311,7 @@ const Home: NextPage = () => {
             disabled={loading}
             onClick={cloc}
             text=" CLOC of a project (v4)"
+            style={{ marginRight: "1rem" }}
           />
           <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />
         </div>
@@ -324,25 +326,11 @@ const Home: NextPage = () => {
             overflow: "hidden",
           }}
         >
-          <div>
-            <input
-              type="range"
-              id="numWorkers"
-              name="numWorkers"
-              min="0"
-              max="40"
-              value={numOfWorkers}
-              onChange={(e) => setNumOfWorkers(parseInt(e.target.value))}
-            />
-            <label htmlFor="numWorkers">
-              Number of workers <b>{numOfWorkers}</b>
-              {numOfWorkers === 0 ? (
-                <span> (0 means CLOC in main thread)</span>
-              ) : (
-                <> </>
-              )}
-            </label>
-          </div>
+          <InputRange
+            label=""
+            value={numOfWorkers}
+            setValue={setNumOfWorkers}
+          />
 
           <Checkbox
             isChecked={isLogActive}

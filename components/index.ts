@@ -9,3 +9,4 @@ export * from "./total-results-label/TotalResultsLabel";
 export * from "./histogram-chart/HistogramChart";
 export * from "./theme-toggle/ThemeToggle";
 export * from "./black-list/BlackList";
+export * from "./input-range/InputRange";

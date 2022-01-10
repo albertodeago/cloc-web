@@ -2,6 +2,7 @@
   --checkbox-size: 1.5rem;
   --checkbox-border-size: 2px;
   --checkbox-border-radius: 3px;
+  margin-bottom: 0.5rem;
 }
 
 /* label AND container of input and label */

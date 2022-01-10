@@ -2,7 +2,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
 }
 
 .addButton,
@@ -20,9 +19,11 @@
   transform: scale(1.2);
 }
 
-.addButton > svg,
-.removeButton > svg {
+.addButton > svg {
   fill: var(--dark-color);
+}
+.removeButton > svg {
+  fill: var(--light-color);
 }
 
 .removeButton > svg {
@@ -37,9 +38,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 2px 0 2px 5px;
+  padding: 2px 0 2px 10px;
   margin-right: 0.5rem;
   margin-top: 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  background-color: var(--dark-color);
+  color: var(--light-color);
 }
