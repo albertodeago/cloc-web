@@ -1,6 +1,7 @@
+import { memo } from "react";
 import styles from "./Clock.module.css";
 
-export function Clock() {
+function Clock() {
   return (
     <div className={styles.clock}>
       <div className={styles.minutes}></div>
@@ -8,3 +9,6 @@ export function Clock() {
     </div>
   );
 }
+
+const MemoizedClock = memo(Clock);
+export { MemoizedClock as Clock };

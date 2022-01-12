@@ -1,6 +1,7 @@
+import { memo } from "react";
 import styles from "./AllowMessage.module.css";
 
-export function AllowMessage() {
+function AllowMessage() {
   return (
     <p className={styles.text}>
       This application makes use of the{" "}
@@ -18,3 +19,7 @@ export function AllowMessage() {
     </p>
   );
 }
+
+const MemoizedAllowMessage = memo(AllowMessage);
+
+export { MemoizedAllowMessage as AllowMessage };

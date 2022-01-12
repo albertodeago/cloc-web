@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
 import styles from "./SettingsIcon.module.css";
 
@@ -6,22 +7,31 @@ type SettingsIconProps = {
   isOpened: boolean;
 };
 
-export function SettingsIcon({ isOpened, setIsOpened }: SettingsIconProps) {
+const styleOrigin = {
+  originX: "50%",
+  originY: "50%",
+};
+const whileHover = {
+  scale: 1.1,
+};
+
+function SettingsIcon({ isOpened, setIsOpened }: SettingsIconProps) {
+  const onClick = () => setIsOpened(!isOpened);
+  const animate = useMemo(
+    () => ({
+      rotate: isOpened ? 135 : 0,
+      transformOrigin: "50% 50%",
+    }),
+    [isOpened]
+  );
+
   return (
     <motion.svg
       className={styles.icon}
-      onClick={() => setIsOpened(!isOpened)}
-      animate={{
-        rotate: isOpened ? 135 : 0,
-        transformOrigin: "50% 50%",
-      }}
-      style={{
-        originX: "50%",
-        originY: "50%",
-      }}
-      whileHover={{
-        scale: 1.1,
-      }}
+      onClick={onClick}
+      animate={animate}
+      style={styleOrigin}
+      whileHover={whileHover}
       x="0px"
       y="0px"
       width="36"
@@ -62,3 +72,7 @@ export function SettingsIcon({ isOpened, setIsOpened }: SettingsIconProps) {
     </motion.svg>
   );
 }
+
+const MemoizedSettingsIcon = memo(SettingsIcon);
+
+export { MemoizedSettingsIcon as SettingsIcon };

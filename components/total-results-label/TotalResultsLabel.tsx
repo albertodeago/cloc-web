@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import { animate } from "framer-motion";
 import styles from "./TotalResultsLabel.module.css";
 
@@ -29,7 +29,7 @@ export type TotalResultsLabelProps = {
   countedLines: number;
   elapsedTime: number;
 };
-export function TotalResultsLabel({
+function TotalResultsLabel({
   countedFiles,
   countedLines,
   elapsedTime,
@@ -48,3 +48,7 @@ export function TotalResultsLabel({
     </p>
   );
 }
+
+const MemoizedTotalReulstsLabel = memo(TotalResultsLabel);
+
+export { MemoizedTotalReulstsLabel as TotalResultsLabel };

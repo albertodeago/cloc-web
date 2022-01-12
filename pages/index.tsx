@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/home.module.css";
 import { compare, Deferred, logger } from "../utils";
 import { run } from "../cloc";
@@ -210,13 +210,13 @@ const Home: NextPage = () => {
     worker.postMessage(msg);
   };
 
-  const cloc = async () => {
+  const cloc = useCallback(async () => {
     if (numOfWorkers === 0) {
       await clocMainThread();
     } else {
       await clocFileWorkers();
     }
-  };
+  }, []);
 
   const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
     if (data.cmd === "dir-handle-set") {
@@ -311,7 +311,6 @@ const Home: NextPage = () => {
             disabled={loading}
             onClick={cloc}
             text=" CLOC of a project (v4)"
-            style={{ marginRight: "1rem" }}
           />
           <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />
         </div>
@@ -326,11 +325,7 @@ const Home: NextPage = () => {
             overflow: "hidden",
           }}
         >
-          <InputRange
-            label=""
-            value={numOfWorkers}
-            setValue={setNumOfWorkers}
-          />
+          <InputRange value={numOfWorkers} setValue={setNumOfWorkers} />
 
           <Checkbox
             isChecked={isLogActive}

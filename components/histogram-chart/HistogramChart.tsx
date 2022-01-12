@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import styles from "./HistogramChart.module.css";
 
@@ -41,15 +42,15 @@ const labelsAnim = {
   },
 };
 
-export function HistogramChart({ counters, normalizedCounters }: ChartProps) {
+const getTop = (i: number) => ({ top: `${i * 30}px` });
+
+function HistogramChart({ counters, normalizedCounters }: ChartProps) {
   return (
     <div className={styles.results}>
       {counters.map(([ext, label, v], i) => (
         <motion.span
           className={styles.resultsLabel}
-          style={{
-            top: `${i * 30}px`,
-          }}
+          style={getTop(i)}
           key={ext + "-label"}
           initial="hidden"
           animate="visible"
@@ -82,3 +83,7 @@ export function HistogramChart({ counters, normalizedCounters }: ChartProps) {
     </div>
   );
 }
+
+const MemoizedHistogramChart = memo(HistogramChart);
+
+export { MemoizedHistogramChart as HistogramChart };

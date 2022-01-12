@@ -1,6 +1,7 @@
+import { memo } from "react";
 import styles from "./Title.module.css";
 
-export function Title() {
+function Title() {
   return (
     <div className={styles.container}>
       <div className={styles.letterContainer}>
@@ -45,3 +46,7 @@ export function Title() {
     </div>
   );
 }
+
+const MemoizedTitle = memo(Title);
+
+export { MemoizedTitle as Title };

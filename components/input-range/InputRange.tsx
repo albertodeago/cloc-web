@@ -1,13 +1,18 @@
+import { memo } from "react";
+
 type InputRangeProps = {
-  label: string;
   value: number;
   setValue: (value: number) => void;
 };
 
 let counter = 0;
 
-export function InputRange({ label, value, setValue }: InputRangeProps) {
+function InputRange({ value, setValue }: InputRangeProps) {
   const id = "num-of-workers-" + counter++;
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setValue(parseInt(e.target.value));
+
+  console.log("input range");
 
   return (
     <div>
@@ -22,8 +27,12 @@ export function InputRange({ label, value, setValue }: InputRangeProps) {
         min="0"
         max="40"
         value={value}
-        onChange={(e) => setValue(parseInt(e.target.value))}
+        onChange={onChange}
       />
     </div>
   );
 }
+
+const MemoizedInputRange = memo(InputRange);
+
+export { MemoizedInputRange as InputRange };

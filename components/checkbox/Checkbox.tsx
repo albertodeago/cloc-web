@@ -1,3 +1,4 @@
+import React, { memo, useCallback } from "react";
 import styles from "./Checkbox.module.css";
 
 type CheckboxProps = {
@@ -6,7 +7,13 @@ type CheckboxProps = {
   text: string;
 };
 
-export function Checkbox({ isChecked, setChecked, text }: CheckboxProps) {
+function Checkbox({ isChecked, setChecked, text }: CheckboxProps) {
+  const onChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setChecked(e.target.checked),
+    [setChecked]
+  );
+
+  console.log("Checkbox");
   return (
     <div className={styles.checkbox}>
       <label className={styles.checkbox__label}>
@@ -14,10 +21,14 @@ export function Checkbox({ isChecked, setChecked, text }: CheckboxProps) {
           type="checkbox"
           className={styles.checkbox__input}
           checked={isChecked}
-          onChange={(e) => setChecked(e.target.checked)}
+          onChange={onChange}
         />
         {text}
       </label>
     </div>
   );
 }
+
+const MemoizedCheckbox = memo(Checkbox);
+
+export { MemoizedCheckbox as Checkbox };
