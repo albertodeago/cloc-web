@@ -348,7 +348,11 @@ const Home: NextPage = () => {
 
         <div>
           {loading ? (
-            <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+            <motion.div
+              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }}
+              style={{ paddingTop: "1rem", paddingBottom: "5rem" }}
+            >
               <Clock />
             </motion.div>
           ) : (
