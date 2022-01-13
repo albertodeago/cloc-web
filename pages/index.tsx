@@ -11,7 +11,6 @@ import {
 import {
   Title,
   Button,
-  Checkbox,
   SettingsIcon,
   InfoCorner,
   AllowMessage,
@@ -19,8 +18,7 @@ import {
   TotalResultsLabel,
   HistogramChart,
   ThemeToggle,
-  BlackList,
-  InputRange,
+  ConfigurationPanel,
 } from "../components";
 import { WorkerMessage } from "../types";
 import { motion } from "framer-motion";
@@ -252,17 +250,6 @@ const Home: NextPage = () => {
     }
   }, []);
 
-  const variants = {
-    expanded: {
-      opacity: 1,
-      height: "auto",
-    },
-    collapsed: {
-      opacity: 0,
-      height: 0,
-    },
-  };
-
   return (
     <div>
       <Head>
@@ -315,42 +302,23 @@ const Home: NextPage = () => {
           <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />
         </div>
 
-        <motion.div
-          layout
-          variants={variants}
-          initial="collapsed"
-          animate={isOpened ? "expanded" : "collapsed"}
-          style={{
-            // backgroundColor: "salmon",
-            overflow: "hidden",
-          }}
-        >
-          <InputRange value={numOfWorkers} setValue={setNumOfWorkers} />
-
-          <Checkbox
-            isChecked={isLogActive}
-            setChecked={(e) => setIsLogActive(!isLogActive)}
-            text="Activate logs (on console)"
-          />
-
-          <BlackList
-            type="file"
-            list={fileBlackList}
-            setList={setFileBlackList}
-          />
-
-          <BlackList
-            type="directory"
-            list={dirBlackList}
-            setList={setDirBlackList}
-          />
-        </motion.div>
+        <ConfigurationPanel
+          isOpened={isOpened}
+          numOfWorkers={numOfWorkers}
+          setNumOfWorkers={setNumOfWorkers}
+          isLogActive={isLogActive}
+          setIsLogActive={setIsLogActive}
+          fileBlackList={fileBlackList}
+          setFileBlackList={setFileBlackList}
+          dirBlackList={dirBlackList}
+          setDirBlackList={setDirBlackList}
+        />
 
         <div>
           {loading ? (
             <motion.div
-              animate={{ opacity: 1 }}
               initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               style={{ paddingTop: "1rem", paddingBottom: "5rem" }}
             >
               <Clock />

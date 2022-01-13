@@ -15,6 +15,22 @@ export function compare(
 }
 
 /**
+ * Generates a random string
+ *
+ * @param int length_
+ * @return string
+ */
+export function randomString(l: number = 6) {
+  const chars =
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz".split("");
+  let str = "";
+  for (let i = 0; i < l; i++) {
+    str += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return str;
+}
+
+/**
  * Given a fileHandle, return the content of the referenced file
  */
 export async function getFileContent(

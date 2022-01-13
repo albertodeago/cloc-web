@@ -23,7 +23,7 @@
   fill: var(--dark-color);
 }
 .removeButton > svg {
-  fill: var(--light-color);
+  fill: var(--dark-color);
 }
 
 .removeButton > svg {
@@ -43,6 +43,7 @@
   margin-top: 0.5rem;
   border-radius: 1rem;
   font-size: 0.8rem;
-  background-color: var(--dark-color);
-  color: var(--light-color);
+  font-weight: bold;
+  background-color: var(--accent-color);
+  color: var(--black-color);
 }

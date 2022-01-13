@@ -1,18 +1,20 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
+import { randomString } from "../../utils";
 
 type InputRangeProps = {
   value: number;
   setValue: (value: number) => void;
 };
 
-let counter = 0;
-
 function InputRange({ value, setValue }: InputRangeProps) {
-  const id = "num-of-workers-" + counter++;
+  const [id, setId] = useState<string>("");
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(parseInt(e.target.value));
 
-  console.log("input range");
+  // this is just to avoid reconciliation errors to have random ids...
+  useEffect(() => {
+    setId(`num-of-workers-${randomString()}`);
+  }, []);
 
   return (
     <div>
