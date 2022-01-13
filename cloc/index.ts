@@ -40,7 +40,7 @@ const run = async function (
   isLogActive: boolean
 ): Promise<ClocResults> {
   logger.setLogLevel(isLogActive ? "info" : "error");
-  console.log(dirIgnoreList, fileIgnoreList);
+
   const results: ClocResults = {
     countedFiles: 0,
     cloc: new Map(),

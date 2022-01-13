@@ -19,7 +19,7 @@ function InputRange({ value, setValue }: InputRangeProps) {
   return (
     <div>
       <label htmlFor={id}>
-        Number of workers <b>{value}</b>
+        Number of workers to use: <b>{value}</b>
         {value === 0 ? <span> (0 means CLOC in main thread)</span> : <> </>}
       </label>
       <input
