@@ -1,5 +1,5 @@
 import { ClocResults } from "../types";
-import { getFileContent, getExtension } from "../utils";
+import { getFileContent, getExtension, logger } from "../utils";
 
 interface ClocResultsWithPromises extends ClocResults {
   promises: Array<Promise<{ ext: string; lines: number }>>;
@@ -19,7 +19,6 @@ const awaitFromWorker = function (
         lines: e.data.payload,
       });
       // terminate the worker when it's done
-      // self.requestIdleCallback(() => worker.terminate());
       worker.terminate();
     };
     worker.postMessage({
@@ -40,21 +39,21 @@ const cloc = async function (
 
     if (fsHandle.kind === "directory") {
       if (!dirBlackList.includes(handleName)) {
-        console.log(`dir ${handleName} found`);
+        logger.info(`Directory ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
       } else {
-        console.log(`dir ${handleName} skipped`);
+        logger.info(`Directory ${handleName} skipped`);
       }
     } else {
       if (!fileBlackList.includes(handleName)) {
-        // console.log(`file ${handleName} found`);
+        logger.info(`File ${handleName} found`);
         results.countedFiles++;
 
         const ext = getExtension(handleName);
         const fileContent = await getFileContent(fsHandle);
         results.promises.push(awaitFromWorker(fileContent, ext));
       } else {
-        // console.log(`file ${handleName} skipped`);
+        logger.info(`File ${handleName} skipped`);
       }
     }
   }

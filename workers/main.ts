@@ -40,7 +40,13 @@ self.onmessage = async function (e: MessageEvent) {
 
       logger.info(`[MainWorker] Running cloc on this MainWorker`);
 
-      const results = await run(dirHandle);
+      initConfiguration(data.payload);
+      const results = await run(
+        dirHandle,
+        fileIgnoreList,
+        dirIgnoreList,
+        isLogActive
+      );
       const msg: WorkerMessage = {
         cmd: "cloc-response",
         payload: results,
@@ -70,7 +76,14 @@ self.onmessage = async function (e: MessageEvent) {
       // This will read all the files and send their content to other workers.
       // These workers will then run cloc on each file and send the results back to this one.
       // Then we can send results back to main thread.
-      const resultsv3 = await runWithFileCounters(dirHandle);
+      initConfiguration(data.payload);
+      const resultsv3 = await runWithFileCounters(
+        dirHandle,
+        numOfWorkers,
+        fileIgnoreList,
+        dirIgnoreList,
+        isLogActive
+      );
       const msgv3: WorkerMessage = {
         cmd: "cloc-response",
         payload: resultsv3,

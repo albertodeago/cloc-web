@@ -49,7 +49,7 @@ export function ConfigurationPanel({
 
       <Checkbox
         isChecked={isLogActive}
-        setChecked={(e) => setIsLogActive(!isLogActive)}
+        setLogActive={setIsLogActive}
         text="Activate logs (on console)"
       />
 

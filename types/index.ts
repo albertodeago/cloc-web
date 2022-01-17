@@ -25,6 +25,7 @@ type ClocResp = {
 
 type ClocReqSingleWorker = {
   cmd: "cloc-req-single-worker";
+  payload: WorkerConfiguration;
 };
 
 type ClocReqLineWorkers = {

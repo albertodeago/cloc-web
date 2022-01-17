@@ -70,7 +70,7 @@ const Home: NextPage = () => {
   ]);
   const [isLogActive, setIsLogActive] = useState<boolean>(false);
 
-  console.log("HOME PAGE RENDERING"); // TODO: remove this
+  // console.log("HOME PAGE RENDERING"); // TODO: remove this
 
   const resetValues = (): void => {
     setCountedFiles(0);
@@ -159,6 +159,12 @@ const Home: NextPage = () => {
     setLoading(true);
     const msg: WorkerMessage = {
       cmd: "cloc-req-single-worker",
+      payload: {
+        numOfWorkers: 1,
+        isLogActive: isLogActive,
+        fileIgnoreList: fileBlackList,
+        dirIgnoreList: dirBlackList,
+      },
     };
     startTime = performance.now();
     worker.postMessage(msg);
@@ -183,6 +189,12 @@ const Home: NextPage = () => {
     setLoading(true);
     const msg: WorkerMessage = {
       cmd: "cloc-req-file-workers",
+      payload: {
+        numOfWorkers: numOfWorkers,
+        isLogActive: isLogActive,
+        fileIgnoreList: fileBlackList,
+        dirIgnoreList: dirBlackList,
+      },
     };
     startTime = performance.now();
     worker.postMessage(msg);
@@ -208,13 +220,13 @@ const Home: NextPage = () => {
     worker.postMessage(msg);
   };
 
-  const cloc = useCallback(async () => {
+  const cloc = async () => {
     if (numOfWorkers === 0) {
       await clocMainThread();
     } else {
       await clocFileWorkers();
     }
-  }, []);
+  };
 
   const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
     if (data.cmd === "dir-handle-set") {
