@@ -93,10 +93,10 @@ const runWithLineCounters = async function (
     cloc: results.cloc,
   };
 
-  console.log("\n\nWork finished");
-  for (const [ext, amount] of realResults.cloc) {
-    console.log(`${ext}: ${amount}`);
-  }
+  // console.log("\n\nWork finished");
+  // for (const [ext, amount] of realResults.cloc) {
+  //   console.log(`${ext}: ${amount}`);
+  // }
 
   return realResults;
 };

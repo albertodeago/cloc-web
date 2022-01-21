@@ -70,8 +70,6 @@ const Home: NextPage = () => {
   ]);
   const [isLogActive, setIsLogActive] = useState<boolean>(false);
 
-  // console.log("HOME PAGE RENDERING"); // TODO: remove this
-
   const resetValues = (): void => {
     setCountedFiles(0);
     setCountedLines(0);
@@ -109,6 +107,16 @@ const Home: NextPage = () => {
 
     startTime = 0;
     endTime = 0;
+
+    // save data
+    const clocObj: any = {};
+    clocRes.forEach((v, k) => {
+      clocObj[k] = v;
+    });
+    fetch("/.netlify/functions/update", {
+      method: "POST",
+      body: JSON.stringify({ data: clocObj }),
+    });
   };
 
   const getDirHandle = async () => {
@@ -153,34 +161,34 @@ const Home: NextPage = () => {
     handleResults(results.countedFiles, totalLinesOfCode, results.cloc);
   };
 
-  const clocSingleWorker = async () => {
-    await getDirHandle();
+  // const clocSingleWorker = async () => {
+  //   await getDirHandle();
 
-    setLoading(true);
-    const msg: WorkerMessage = {
-      cmd: "cloc-req-single-worker",
-      payload: {
-        numOfWorkers: 1,
-        isLogActive: isLogActive,
-        fileIgnoreList: fileBlackList,
-        dirIgnoreList: dirBlackList,
-      },
-    };
-    startTime = performance.now();
-    worker.postMessage(msg);
-  };
+  //   setLoading(true);
+  //   const msg: WorkerMessage = {
+  //     cmd: "cloc-req-single-worker",
+  //     payload: {
+  //       numOfWorkers: 1,
+  //       isLogActive: isLogActive,
+  //       fileIgnoreList: fileBlackList,
+  //       dirIgnoreList: dirBlackList,
+  //     },
+  //   };
+  //   startTime = performance.now();
+  //   worker.postMessage(msg);
+  // };
 
-  const clocLineWorkers = async () => {
-    await getDirHandle();
-    resetValues();
+  // const clocLineWorkers = async () => {
+  //   await getDirHandle();
+  //   resetValues();
 
-    setLoading(true);
-    const msg: WorkerMessage = {
-      cmd: "cloc-req-line-workers",
-    };
-    startTime = performance.now();
-    worker.postMessage(msg);
-  };
+  //   setLoading(true);
+  //   const msg: WorkerMessage = {
+  //     cmd: "cloc-req-line-workers",
+  //   };
+  //   startTime = performance.now();
+  //   worker.postMessage(msg);
+  // };
 
   const clocFileWorkers = async () => {
     await getDirHandle();
@@ -200,25 +208,25 @@ const Home: NextPage = () => {
     worker.postMessage(msg);
   };
 
-  const clocV4 = async () => {
-    await getDirHandle();
-    resetValues();
+  // const clocV4 = async () => {
+  //   await getDirHandle();
+  //   resetValues();
 
-    setLoading(true);
-    const msg: WorkerMessage = {
-      cmd: "cloc-req-v4",
-      payload: {
-        numOfWorkers: numOfWorkers,
-        isLogActive: isLogActive,
-        fileIgnoreList: fileBlackList,
-        dirIgnoreList: dirBlackList,
-      },
-    };
-    startTime = performance.now();
+  //   setLoading(true);
+  //   const msg: WorkerMessage = {
+  //     cmd: "cloc-req-v4",
+  //     payload: {
+  //       numOfWorkers: numOfWorkers,
+  //       isLogActive: isLogActive,
+  //       fileIgnoreList: fileBlackList,
+  //       dirIgnoreList: dirBlackList,
+  //     },
+  //   };
+  //   startTime = performance.now();
 
-    logger.info("[MainThread] Sending CLOC request to main worker");
-    worker.postMessage(msg);
-  };
+  //   logger.info("[MainThread] Sending CLOC request to main worker");
+  //   worker.postMessage(msg);
+  // };
 
   const cloc = async () => {
     if (numOfWorkers === 0) {
@@ -259,6 +267,10 @@ const Home: NextPage = () => {
     if (typeof window !== "undefined") {
       worker = new Worker(new URL("../workers/main.ts", import.meta.url));
       worker.addEventListener("message", onWorkerMessage);
+
+      fetch("/.netlify/functions/get-data")
+        .then((res) => res.json())
+        .then((res) => console.log(res));
     }
   }, []);
 

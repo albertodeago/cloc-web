@@ -115,10 +115,6 @@ that the solutions that uses multiple workers are a lot faster compared to the
 ones that uses only one worker or even worse the one that runs in the main thread
 (that also risk of freezing the UI).
 
-## Credits
-
-- Thanks to [Tiago Franco for the amazing clock loader](https://codepen.io/tiagofranco/pen/mKeyt)
-
 ## Setup
 
 Make sure to install the dependencies
@@ -135,6 +131,12 @@ Start the development server on http://localhost:3000
 npm run dev
 ```
 
+This will open the netlify dev entironment. To do so you need to login with the netlify cli
+
+```bash
+netlify login
+```
+
 ## Production
 
 Build the application for production:
@@ -142,3 +144,23 @@ Build the application for production:
 ```bash
 npm run build
 ```
+
+## Deploy
+
+The project is automatically deployed in Netlify when a push occurs in the main branch.
+
+The project uses also FaunaDB, so you will need to create an account and set the
+entironment variables for the netlify functions in the Netlify project dashboard.
+
+A sample of variable needed is:
+
+```
+FAUNADB_SECRET=<your_secret>
+FAUNADB_DOMAIN=<funadb_domain>
+FAUNADB_DOCUMENT_ID=<ref_id_to_prod_document> # you need to manually create in the dashboard
+FAUNADB_DEV_DOCUMENT_ID=<ref_id_to_dev_document> # you need to manually create in the dashboard
+```
+
+## Credits
+
+- Thanks to [Tiago Franco for the amazing clock loader](https://codepen.io/tiagofranco/pen/mKeyt)

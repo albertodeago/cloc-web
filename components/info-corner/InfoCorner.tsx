@@ -27,7 +27,6 @@ const menuVariant3 = {
 };
 const whileHover = { scale: 1.1 };
 const MenuToggle = ({ toggle }: { toggle: Function }) => {
-  console.log("MenuToggle");
   return (
     <motion.button
       whileHover={whileHover}
