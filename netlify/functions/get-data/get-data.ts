@@ -5,7 +5,7 @@ const q = faunadb.query;
 const faunaSecret = process.env.FAUNADB_SECRET;
 const faunaDomain = process.env.FAUNADB_DOMAIN;
 const faunaDocumentId =
-  process.env.CONTEXT !== "production"
+  process.env.CONTEXT === "dev"
     ? process.env.FAUNADB_DEV_DOCUMENT_ID
     : process.env.FAUNADB_DOCUMENT_ID;
 
@@ -18,8 +18,6 @@ export const handler: Handler = async (event, context) => {
 
   let statusCode = 200;
   let results = {};
-
-  console.log(process.env.CONTEXT);
 
   try {
     // query db
