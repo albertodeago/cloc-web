@@ -19,6 +19,8 @@ export const handler: Handler = async (event, context) => {
   let statusCode = 200;
   let results = {};
 
+  console.log(process.env.CONTEXT);
+
   try {
     // query db
     const { data } = await client.query(
