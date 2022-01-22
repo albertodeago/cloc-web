@@ -177,6 +177,15 @@ const runWithFileCounters = async function (
 
   await cloc(dirHandle, results, dirBlackList, fileBlackList);
   logger.info("All file scanned, now waiting for workers to finish");
+
+  // if we have no promises (empty project), return
+  if (results.promises.length === 0) {
+    return {
+      countedFiles: 0,
+      cloc: new Map(),
+    };
+  }
+
   const res = await Promise.all(results.promises);
   res.forEach(({ ext, lines }) => {
     const amounfPerExt = results.cloc.get(ext) || 0;
@@ -186,10 +195,6 @@ const runWithFileCounters = async function (
     countedFiles: results.countedFiles,
     cloc: results.cloc,
   };
-
-  // for (const [ext, amount] of realResults.cloc) {
-  //   console.log(`${ext}: ${amount}`);
-  // }
 
   return realResults;
 };

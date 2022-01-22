@@ -86,6 +86,15 @@ const Home: NextPage = () => {
     setElapsedTime(Math.round(endTime - startTime));
     setCountedFiles(countedFiles);
     setCountedLines(countedLines);
+
+    if (clocRes.size === 0) {
+      logger.info(
+        "No results, maybe the project is empty? Or everything was in ignore list"
+      );
+      // TODO: show a message to the user
+      return;
+    }
+
     const counters: Array<[string, string, number]> = [];
     clocRes.forEach((v, k) => {
       const total = ((v / countedLines) * 100).toFixed(2);
