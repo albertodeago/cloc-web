@@ -44,8 +44,8 @@ type ClocReqV4 = {
 
 export type WorkerConfiguration = {
   numOfWorkers: number;
-  fileIgnoreList: string[];
-  dirIgnoreList: string[];
+  fileIgnoreList: (string | RegExp)[];
+  dirIgnoreList: (string | RegExp)[];
   isLogActive: boolean;
 };
 

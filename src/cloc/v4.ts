@@ -109,22 +109,35 @@ const sendMessage = async function (
   }
 };
 
+/**
+ * Return true if the str match against any of the pattern (with regex)
+ */
+const isBlackListed = (
+  patternList: (string | RegExp)[],
+  str: string
+): boolean =>
+  !!patternList.find((pattern) =>
+    typeof pattern === "string"
+      ? str.indexOf(pattern) !== -1
+      : new RegExp(pattern).test(str)
+  );
+
 const cloc = async function (
   dirHandle: FileSystemDirectoryHandle,
   results: ClocResults,
-  dirBlackList: Array<string>,
-  fileBlackList: Array<string>
+  dirBlackList: (string | RegExp)[],
+  fileBlackList: (string | RegExp)[]
 ) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     if (fsHandle.kind === "directory") {
-      if (!dirBlackList.includes(handleName)) {
+      if (!isBlackListed(dirBlackList, handleName)) {
         logger.info(`Directory ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
       } else {
         logger.info(`Directory ${handleName} skipped`);
       }
     } else {
-      if (!fileBlackList.includes(handleName)) {
+      if (!isBlackListed(fileBlackList, handleName)) {
         logger.info(`File ${handleName} found`);
         filesToCount++;
         sendMessage(handleName, fsHandle);
@@ -138,8 +151,8 @@ const cloc = async function (
 const v4 = async function (
   dirHandle: FileSystemDirectoryHandle,
   numOfWorkers: number,
-  fileIgnoreList: string[],
-  dirIgnoreList: string[],
+  fileIgnoreList: (string | RegExp)[],
+  dirIgnoreList: (string | RegExp)[],
   isLogActive: boolean
 ) {
   logger.setLogLevel(isLogActive ? "info" : "error");

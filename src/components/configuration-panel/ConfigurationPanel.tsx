@@ -7,10 +7,10 @@ type Props = {
   setNumOfWorkers: (v: number) => void;
   isLogActive: boolean;
   setIsLogActive: (v: boolean) => void;
-  fileBlackList: string[];
-  setFileBlackList: (v: string[]) => void;
-  dirBlackList: string[];
-  setDirBlackList: (v: string[]) => void;
+  fileBlackList: (string | RegExp)[];
+  setFileBlackList: (v: (string | RegExp)[]) => void;
+  dirBlackList: (string | RegExp)[];
+  setDirBlackList: (v: (string | RegExp)[]) => void;
 };
 
 const variants = {

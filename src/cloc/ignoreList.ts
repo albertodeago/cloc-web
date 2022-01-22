@@ -1,6 +1,6 @@
 export const fileDefaultIgnoreList = [
   "package-lock.json",
-  "yarn.lock",
+  /.*\.lock/,
   ".gitignore",
   "code-search",
   "github-issues",

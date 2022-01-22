@@ -3,8 +3,8 @@ import styles from "./BlackList.module.css";
 
 type BlackListProps = {
   type: "directory" | "file";
-  list: string[];
-  setList: (list: string[]) => void;
+  list: (string | RegExp)[];
+  setList: (list: (string | RegExp)[]) => void;
 };
 
 export function BlackList({ type, list, setList }: BlackListProps) {
@@ -12,7 +12,11 @@ export function BlackList({ type, list, setList }: BlackListProps) {
 
   const addItem = () => {
     if (text) {
-      setList([...list, text]);
+      let value =
+        text.split("/").length > 1
+          ? new RegExp(text.slice(1, text.length - 1))
+          : text;
+      setList([...list, value]);
       setText("");
     }
   };
@@ -25,7 +29,10 @@ export function BlackList({ type, list, setList }: BlackListProps) {
 
   return (
     <div className="blacklist">
-      <p>{type === "file" ? "File" : "Directory"} ignore list:</p>
+      <p>
+        {type === "file" ? "File" : "Directory"} ignore list (use / if to use
+        RegExp):
+      </p>
       <div className={styles.inputWrapper}>
         <input
           type="text"
@@ -44,7 +51,7 @@ export function BlackList({ type, list, setList }: BlackListProps) {
       <ul className={styles.list}>
         {list.map((item, index) => (
           <li className={styles.listItem} key={index}>
-            {item}
+            {typeof item !== "string" ? item.toString() : item}
             <button
               className={styles.removeButton}
               onClick={() => removeItem(index)}

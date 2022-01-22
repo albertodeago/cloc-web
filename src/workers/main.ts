@@ -7,8 +7,8 @@ import { v4 } from "../cloc/v4";
 
 let dirHandle: FileSystemDirectoryHandle | null = null;
 let numOfWorkers: number;
-let fileIgnoreList: string[];
-let dirIgnoreList: string[];
+let fileIgnoreList: (string | RegExp)[];
+let dirIgnoreList: (string | RegExp)[];
 let isLogActive: boolean;
 
 const initConfiguration = (payload: WorkerConfiguration) => {
@@ -80,8 +80,8 @@ self.onmessage = async function (e: MessageEvent) {
       const resultsv3 = await runWithFileCounters(
         dirHandle,
         numOfWorkers,
-        fileIgnoreList,
         dirIgnoreList,
+        fileIgnoreList,
         isLogActive
       );
       const msgv3: WorkerMessage = {

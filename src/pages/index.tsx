@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/home.module.css";
 import { compare, Deferred, logger } from "../utils";
 import { run } from "../cloc";
@@ -62,10 +62,10 @@ const Home: NextPage = () => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
   const [numOfWorkers, setNumOfWorkers] = useState<number>(8);
-  const [fileBlackList, setFileBlackList] = useState<string[]>([
+  const [fileBlackList, setFileBlackList] = useState<(string | RegExp)[]>([
     ...fileDefaultIgnoreList,
   ]);
-  const [dirBlackList, setDirBlackList] = useState<string[]>([
+  const [dirBlackList, setDirBlackList] = useState<(string | RegExp)[]>([
     ...dirDefaultIgnoreList,
   ]);
   const [isLogActive, setIsLogActive] = useState<boolean>(false);
@@ -92,6 +92,7 @@ const Home: NextPage = () => {
       const label = `${k} - ${v.toLocaleString()} lines (${total}% of total)`;
       counters.push([k, label, v]);
     });
+
     counters.sort(compare);
     setCounters(counters);
 
@@ -273,6 +274,10 @@ const Home: NextPage = () => {
         .then((res) => console.log(res));
     }
   }, []);
+
+  useEffect(() => {
+    logger.setLogLevel(isLogActive ? "info" : "none");
+  }, [isLogActive]);
 
   return (
     <div>
