@@ -15,7 +15,9 @@ function AllowMessage() {
       to allow the user to select the project to CLOC of. You will be prompted
       to give the browser access to your file system.
       <br />
-      No data about any project is stored anywhere.
+      We store only the number of visits and the <i>number</i> of lines counted,
+      all the data is collected anonymously and cannot be traced back to any
+      project / user.
     </p>
   );
 }
