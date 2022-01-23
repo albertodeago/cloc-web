@@ -29,3 +29,16 @@
   word-wrap: break-word;
   text-align: center;
 }
+
+@media screen and (max-width: 768px) {
+  .container {
+    margin-bottom: 7rem;
+  }
+  .firstLetter {
+    font-size: 3rem;
+  }
+  .verticalText {
+    font-size: 1.2rem;
+    top: 4.5ch;
+  }
+}
