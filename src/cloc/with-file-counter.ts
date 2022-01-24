@@ -1,5 +1,6 @@
 import { ClocResults } from "../types";
 import { getExtension, Deferred, logger } from "../utils";
+import { shouldBeIgnored } from "./ignoreList";
 
 interface ClocResultsWithPromises extends ClocResults {
   promises: Array<Promise<{ ext: string; lines: number }>>;
@@ -117,19 +118,6 @@ const awaitFromWorker = async function (
   });
 };
 
-/**
- * Return true if the str match against any of the pattern (with regex)
- */
-const isBlackListed = (
-  patternList: (string | RegExp)[],
-  str: string
-): boolean =>
-  !!patternList.find((pattern) =>
-    typeof pattern === "string"
-      ? str.indexOf(pattern) !== -1
-      : new RegExp(pattern).test(str)
-  );
-
 const cloc = async function (
   dirHandle: FileSystemDirectoryHandle,
   results: ClocResultsWithPromises,
@@ -138,14 +126,14 @@ const cloc = async function (
 ) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     if (fsHandle.kind === "directory") {
-      if (!isBlackListed(dirBlackList, handleName)) {
+      if (!shouldBeIgnored(dirBlackList, handleName)) {
         logger.info(`Directory ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
       } else {
         logger.info(`Directory ${handleName} skipped`);
       }
     } else {
-      if (!isBlackListed(fileBlackList, handleName)) {
+      if (!shouldBeIgnored(fileBlackList, handleName)) {
         logger.info(`File ${handleName} found`);
         results.countedFiles++;
 

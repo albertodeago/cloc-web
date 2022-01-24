@@ -1,4 +1,6 @@
-export const fileDefaultIgnoreList = [
+export type IgnoreEntry = string | RegExp;
+
+export const fileDefaultIgnoreList: IgnoreEntry[] = [
   "package-lock.json",
   /.*\.lock/,
   ".gitignore",
@@ -6,7 +8,7 @@ export const fileDefaultIgnoreList = [
   "github-issues",
 ];
 
-export const dirDefaultIgnoreList = [
+export const dirDefaultIgnoreList: IgnoreEntry[] = [
   ".svn",
   ".cvs",
   ".hg",
@@ -16,3 +18,14 @@ export const dirDefaultIgnoreList = [
   ".config",
   "node_modules",
 ];
+
+export const shouldBeIgnored = (
+  patternList: IgnoreEntry[],
+  str: string
+): boolean => {
+  return !!patternList.find((pattern) =>
+    typeof pattern === "string"
+      ? str.indexOf(pattern) !== -1
+      : pattern.test(str)
+  );
+};
