@@ -2,4 +2,13 @@
   display: inline-block;
   cursor: pointer;
   fill: var(--black-color);
+  width: 36px;
+  height: 36px;
+}
+
+@media screen and (max-width: 768px) {
+  .icon {
+    width: 26px;
+    height: 26px;
+  }
 }

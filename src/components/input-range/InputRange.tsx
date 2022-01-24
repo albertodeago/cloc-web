@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { randomString } from "../../utils";
+import styles from "./InputRange.module.css";
 
 type InputRangeProps = {
   value: number;
@@ -18,7 +19,7 @@ function InputRange({ value, setValue }: InputRangeProps) {
 
   return (
     <div>
-      <label htmlFor={id}>
+      <label htmlFor={id} className={styles.label}>
         Number of workers to use: <b>{value}</b>
         {value === 0 ? <span> (0 means CLOC in main thread)</span> : <> </>}
       </label>

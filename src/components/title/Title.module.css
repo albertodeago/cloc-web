@@ -35,10 +35,10 @@
     margin-bottom: 7rem;
   }
   .firstLetter {
-    font-size: 3rem;
+    font-size: 3.5rem;
   }
   .verticalText {
     font-size: 1.2rem;
-    top: 4.5ch;
+    top: 5ch;
   }
 }

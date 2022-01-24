@@ -47,3 +47,9 @@
   z-index: 4;
   transition: color 0.35s ease-in;
 }
+
+@media screen and (max-width: 768px) {
+  .clocButton {
+    font-size: 0.8rem;
+  }
+}

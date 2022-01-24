@@ -332,11 +332,7 @@ const Home: NextPage = () => {
           text="CLOC of a project (file workers)"
         /> */}
         <div className={styles.buttonWrapper}>
-          <Button
-            disabled={loading}
-            onClick={cloc}
-            text=" CLOC of a project (v4)"
-          />
+          <Button disabled={loading} onClick={cloc} text=" CLOC of a project" />
           <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />
         </div>
 

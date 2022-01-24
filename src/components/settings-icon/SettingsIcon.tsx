@@ -34,8 +34,6 @@ function SettingsIcon({ isOpened, setIsOpened }: SettingsIconProps) {
       whileHover={whileHover}
       x="0px"
       y="0px"
-      width="36"
-      height="36"
       viewBox="0 0 478.703 478.703"
     >
       <g>
