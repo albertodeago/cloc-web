@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo } from "react";
-import { animate } from "framer-motion";
+import { animate, useReducedMotion } from "framer-motion";
 import styles from "./TotalResultsLabel.module.css";
 
 interface CounterProps {
@@ -7,11 +7,12 @@ interface CounterProps {
   to: number;
 }
 function Counter({ from, to }: CounterProps) {
+  const shouldReduceMotion = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const controls = animate(from, to, {
-      duration: 1,
+      duration: shouldReduceMotion ? 0 : 1,
       onUpdate(value) {
         if (ref.current) {
           ref.current.textContent = Math.round(value).toLocaleString();

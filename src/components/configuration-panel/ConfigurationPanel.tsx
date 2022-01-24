@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { InputRange, Checkbox, BlackList } from "../";
 
 type Props = {
@@ -35,12 +35,15 @@ export function ConfigurationPanel({
   dirBlackList,
   setDirBlackList,
 }: Props) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <motion.div
       layout
       variants={variants}
       initial="collapsed"
       animate={isOpened ? "expanded" : "collapsed"}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
       style={{
         overflow: "hidden",
       }}

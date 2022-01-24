@@ -48,6 +48,13 @@
   transition: color 0.35s ease-in;
 }
 
+@media (prefers-reduced-motion) {
+  .clocButtonFill,
+  .clocButtonText {
+    transition: none;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .clocButton {
     font-size: 0.8rem;

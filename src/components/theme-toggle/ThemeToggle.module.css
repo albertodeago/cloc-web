@@ -21,7 +21,7 @@
   height: 15px;
   background-color: var(--black-color);
   position: absolute;
-  transition: all 500ms ease; /*cubic-bezier(0.68, -0.55, 0.265, 1.55);*/
+  transition: all 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
   filter: blur(20px);
 }
 
@@ -41,5 +41,11 @@
   .btn:hover .glow {
     width: 80px;
     height: 80px;
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .glow {
+    transition: none;
   }
 }

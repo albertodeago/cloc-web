@@ -53,3 +53,8 @@
     -webkit-transform: rotate(360deg);
   }
 }
+
+.textLoading {
+  font-size: 2rem;
+  text-align: center;
+}

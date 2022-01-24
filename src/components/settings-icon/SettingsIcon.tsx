@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import styles from "./SettingsIcon.module.css";
 
 type SettingsIconProps = {
@@ -16,11 +16,14 @@ const whileHover = {
 };
 
 function SettingsIcon({ isOpened, setIsOpened }: SettingsIconProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   const onClick = () => setIsOpened(!isOpened);
   const animate = useMemo(
     () => ({
       rotate: isOpened ? 135 : 0,
       transformOrigin: "50% 50%",
+      transition: { duration: shouldReduceMotion ? 0 : 0.2 },
     }),
     [isOpened]
   );

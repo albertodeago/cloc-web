@@ -1,5 +1,5 @@
-import { motion, useCycle } from "framer-motion";
 import { memo, useMemo } from "react";
+import { motion, useCycle, useReducedMotion } from "framer-motion";
 import styles from "./InfoCorner.module.css";
 
 const Path = (props: any) => (
@@ -65,8 +65,13 @@ const variants = {
     },
   }),
 };
+const variantsNoMotion = {
+  open: { pathLength: 1, transition: { duration: 0 } },
+  closed: { pathLength: 0, transition: { duration: 0 } },
+};
 
 function InfoCorner() {
+  const shouldReduceMotion = useReducedMotion();
   const [isOpen, toggle] = useCycle(false, true);
 
   const whileHover = useMemo(
@@ -95,7 +100,7 @@ function InfoCorner() {
                 fill="transparent"
                 strokeWidth="10"
                 whileHover={whileHover}
-                variants={variants}
+                variants={shouldReduceMotion ? variantsNoMotion : variants}
                 custom={1}
               />
             </svg>
@@ -114,7 +119,7 @@ function InfoCorner() {
                 fill="transparent"
                 strokeWidth="10"
                 whileHover={whileHover}
-                variants={variants}
+                variants={shouldReduceMotion ? variantsNoMotion : variants}
                 custom={2}
               />
             </svg>
@@ -127,7 +132,7 @@ function InfoCorner() {
               fill="transparent"
               strokeWidth="1"
               whileHover={whileHover}
-              variants={variants}
+              variants={shouldReduceMotion ? variantsNoMotion : variants}
               custom={3}
             />
           </svg>
