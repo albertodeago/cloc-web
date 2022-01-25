@@ -25,7 +25,7 @@ function SettingsIcon({ isOpened, setIsOpened }: SettingsIconProps) {
       transformOrigin: "50% 50%",
       transition: { duration: shouldReduceMotion ? 0 : 0.2 },
     }),
-    [isOpened]
+    [isOpened] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return (

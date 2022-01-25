@@ -286,7 +286,7 @@ const Home: NextPage = () => {
         .then((res) => res.json())
         .then((res) => console.log(res));
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     logger.setLogLevel(isLogActive ? "info" : "none");

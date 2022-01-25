@@ -20,7 +20,7 @@ function Counter({ from, to }: CounterProps) {
       },
     });
     return () => controls.stop();
-  }, [from, to]);
+  }, [from, to]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <span ref={ref} />;
 }
