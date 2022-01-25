@@ -71,7 +71,7 @@ describe("Run 'normal'", () => {
     const fileIgnoreList: (string | RegExp)[] = [];
     const dirIgnoreList: (string | RegExp)[] = [];
     const isLogActive = true;
-    run(dirHandle, fileIgnoreList, dirIgnoreList, isLogActive);
+    run(dirHandle, dirIgnoreList, fileIgnoreList, isLogActive);
     expect(logger.setLogLevel).toHaveBeenCalledWith("info");
   });
 
@@ -81,8 +81,8 @@ describe("Run 'normal'", () => {
     const isLogActive = false;
     const results = await run(
       dirHandle,
-      fileIgnoreList,
       dirIgnoreList,
+      fileIgnoreList,
       isLogActive
     );
     expect(results.countedFiles).toBe(2);
@@ -96,8 +96,8 @@ describe("Run 'normal'", () => {
     const isLogActive = false;
     const results = await run(
       dirHandle,
-      fileIgnoreList,
       dirIgnoreList,
+      fileIgnoreList,
       isLogActive
     );
     expect(results.countedFiles).toBe(2);
@@ -111,8 +111,8 @@ describe("Run 'normal'", () => {
     const isLogActive = false;
     const results = await run(
       dirHandle,
-      fileIgnoreList,
       dirIgnoreList,
+      fileIgnoreList,
       isLogActive
     );
     expect(results.countedFiles).toBe(3);
@@ -127,8 +127,8 @@ describe("Run 'normal'", () => {
     const isLogActive = false;
     const results = await run(
       dirHandle,
-      fileIgnoreList,
       dirIgnoreList,
+      fileIgnoreList,
       isLogActive
     );
     expect(results.countedFiles).toBe(3);
@@ -143,8 +143,8 @@ describe("Run 'normal'", () => {
     const isLogActive = false;
     const results = await run(
       dirHandle,
-      fileIgnoreList,
       dirIgnoreList,
+      fileIgnoreList,
       isLogActive
     );
     expect(results.countedFiles).toBe(4);

@@ -10,7 +10,6 @@ const cloc = async function (
 ) {
   for await (const [handleName, fsHandle] of dirHandle.entries()) {
     if (fsHandle.kind === "directory") {
-      console.log(handleName, dirBlackList);
       if (!shouldBeIgnored(dirBlackList, handleName)) {
         logger.info(`Directory ${handleName} found`);
         await cloc(fsHandle, results, dirBlackList, fileBlackList);
