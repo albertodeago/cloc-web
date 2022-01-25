@@ -137,6 +137,22 @@ This will open the netlify dev entironment. To do so you need to login with the 
 netlify login
 ```
 
+## Test
+
+To run unit tests:
+
+```bash
+npm run test:unit
+npm run test:unit:watch # in watch mode
+```
+
+To run e2e tests:
+
+```bash
+npm run e2e
+npm run test:headless # in headless mode
+```
+
 ## Production
 
 Build the application for production:
@@ -160,6 +176,8 @@ FAUNADB_DOMAIN=<funadb_domain>
 FAUNADB_DOCUMENT_ID=<ref_id_to_prod_document> # you need to manually create in the dashboard
 FAUNADB_DEV_DOCUMENT_ID=<ref_id_to_dev_document> # you need to manually create in the dashboard
 ```
+
+E2e tests are automatically ran before the deploy in netlify using [netlify-plugin-cypress](https://github.com/cypress-io/netlify-plugin-cypress)
 
 ## Credits
 
