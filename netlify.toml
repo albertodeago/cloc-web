@@ -16,7 +16,7 @@
     [plugins.inputs.preBuild]
         enable = true
         start = 'npm run next:dev'
-        wait-on = 'http://localhost:8888'
+        wait-on = 'http://localhost:3000'
         wait-on-timeout = '30' # seconds
 
 # To enable using cache between builds, create a CYPRESS_CACHE_FOLDER and place the Cypress binary inside the node_modules folder.
