@@ -7,5 +7,13 @@ CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary"
 # set TERM variable for terminal output
 TERM = "xterm"
 [[plugins]]
-package = "netlify-plugin-cypress"
+    package = "netlify-plugin-cypress"
+    # let's run tests against development server
+    # before building it (and testing the built site)
+    [plugins.inputs.preBuild]
+        enable = true
+        start = 'npx netlify dev'
+        wait-on = 'http://localhost:8888'
+        wait-on-timeout = '30' # seconds
+
 # To enable using cache between builds, create a CYPRESS_CACHE_FOLDER and place the Cypress binary inside the node_modules folder.
