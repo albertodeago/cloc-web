@@ -1,0 +1,11 @@
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build.environment]
+# cache Cypress binary in local "node_modules" folder
+# so Netlify caches it
+CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary"
+# set TERM variable for terminal output
+TERM = "xterm"
+[[plugins]]
+package = "netlify-plugin-cypress"
+# To enable using cache between builds, create a CYPRESS_CACHE_FOLDER and place the Cypress binary inside the node_modules folder.
