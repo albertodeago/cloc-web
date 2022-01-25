@@ -1,18 +1,21 @@
 # https://docs.netlify.com/configure-builds/file-based-configuration/
 
+[build]
+  command = "npm run build"
+  publish = "out"
 [build.environment]
-# cache Cypress binary in local "node_modules" folder
-# so Netlify caches it
-CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary"
-# set TERM variable for terminal output
-TERM = "xterm"
+    # cache Cypress binary in local "node_modules" folder
+    # so Netlify caches it
+    CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary"
+    # set TERM variable for terminal output
+    TERM = "xterm"
 [[plugins]]
     package = "netlify-plugin-cypress"
     # let's run tests against development server
     # before building it (and testing the built site)
     [plugins.inputs.preBuild]
         enable = true
-        start = 'npx netlify dev'
+        start = 'npm run dev'
         wait-on = 'http://localhost:8888'
         wait-on-timeout = '30' # seconds
 
