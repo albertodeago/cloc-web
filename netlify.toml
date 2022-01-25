@@ -19,4 +19,7 @@
         wait-on = 'http://localhost:3000'
         wait-on-timeout = '30' # seconds
 
+    # but we do not want to run tests against the deployed site
+    [plugins.inputs]
+        enable = false
 # To enable using cache between builds, create a CYPRESS_CACHE_FOLDER and place the Cypress binary inside the node_modules folder.
