@@ -23,3 +23,20 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+// This command allows the input type range to be changed and reflected to React state
+Cypress.Commands.add("controlledInputChange", (input, value) => {
+  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+    window.HTMLInputElement.prototype,
+    "value"
+  ).set;
+
+  const changeInputValue = (inputToChange) => (newValue) => {
+    nativeInputValueSetter.call(inputToChange[0], newValue);
+    inputToChange[0].dispatchEvent(
+      new Event("change", { newValue, bubbles: true })
+    );
+  };
+
+  return cy.get(input).then((input) => changeInputValue(input)(value));
+});

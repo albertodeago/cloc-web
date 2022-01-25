@@ -38,7 +38,10 @@ function SettingsIcon({ isOpened, setIsOpened }: SettingsIconProps) {
       x="0px"
       y="0px"
       viewBox="0 0 478.703 478.703"
+      role="img"
+      data-test-id="settings-icon"
     >
+      <title>Open settings</title>
       <g>
         <g>
           <path

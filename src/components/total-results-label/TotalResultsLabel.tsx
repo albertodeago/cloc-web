@@ -36,7 +36,7 @@ function TotalResultsLabel({
   elapsedTime,
 }: TotalResultsLabelProps) {
   return (
-    <p className={styles.totalResults}>
+    <p className={styles.totalResults} data-test-id="results-label">
       Counted{" "}
       <b>
         <Counter from={0} to={countedFiles} />

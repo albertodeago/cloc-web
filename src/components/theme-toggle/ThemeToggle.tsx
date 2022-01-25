@@ -4,7 +4,11 @@ import { toggleTheme } from "../../utils";
 
 function ThemeToggle() {
   return (
-    <button className={styles.btn} onClick={() => toggleTheme()}>
+    <button
+      className={styles.btn}
+      onClick={() => toggleTheme()}
+      data-test-id="theme-toggle"
+    >
       <span className={styles.glow}></span>
     </button>
   );

@@ -129,7 +129,7 @@ const Home: NextPage = () => {
     });
   };
 
-  const getDirHandle = async () => {
+  const getDirHandle = async (sendToWorker = true) => {
     const dh = await window.showDirectoryPicker();
     if (!dh) {
       alert("You must select the directory of a project");
@@ -137,20 +137,23 @@ const Home: NextPage = () => {
     } else {
       logger.info("[MainThread] Directory handle received");
       dirHandle = dh;
-      dirHandleWorkerDeferred = new Deferred();
-      const msg: WorkerMessage = {
-        cmd: "set-dir-handle",
-        payload: dirHandle,
-      };
-      worker.postMessage(msg);
 
-      // we need to wait for the web-workers to have set the dirHandle on its side
-      await dirHandleWorkerDeferred.promise;
+      if (sendToWorker) {
+        dirHandleWorkerDeferred = new Deferred();
+        const msg: WorkerMessage = {
+          cmd: "set-dir-handle",
+          payload: dirHandle,
+        };
+        worker.postMessage(msg);
+
+        // we need to wait for the web-workers to have set the dirHandle on its side
+        await dirHandleWorkerDeferred.promise;
+      }
     }
   };
 
   const clocMainThread = async () => {
-    await getDirHandle();
+    await getDirHandle(false);
     resetValues();
 
     setLoading(true);
@@ -239,6 +242,7 @@ const Home: NextPage = () => {
   // };
 
   const cloc = async () => {
+    console.log("CLOC", numOfWorkers);
     if (numOfWorkers === 0) {
       await clocMainThread();
     } else {
