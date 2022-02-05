@@ -7,6 +7,57 @@ WebWorkers to keep the UI interactive and the new
 [WebFileSystemAPI](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
 to let the user select the project from the local file-system.
 
+## Propose new default ignore patterns
+
+Just [open a PR](https://github.com/albertodeago/cloc-web/pulls) changing the [ignore file](https://github.com/albertodeago/cloc-web/blob/main/src/cloc/ignoreList.ts).  
+Alternatively open an issue asking what you want to add.
+
+## Setup
+
+Make sure to install the dependencies
+
+```bash
+npm install
+```
+
+## Development
+
+Start the development server on http://localhost:3000
+
+```bash
+npm run dev
+```
+
+This will open the netlify dev entironment. To do so you need to login with the netlify cli
+
+```bash
+netlify login
+```
+
+## Test
+
+To run unit tests:
+
+```bash
+npm run test:unit
+npm run test:unit:watch # in watch mode
+```
+
+To run e2e tests:
+
+```bash
+npm run e2e
+npm run test:headless # in headless mode
+```
+
+## Production
+
+Build the application for production:
+
+```bash
+npm run build
+```
+
 ## Notes
 
 This project doesn't aim to be a [cloc](https://github.com/AlDanial/cloc) replacement.
@@ -114,52 +165,6 @@ Anyway even if these numbers are taken on my machine, I'm very happy to see
 that the solutions that uses multiple workers are a lot faster compared to the
 ones that uses only one worker or even worse the one that runs in the main thread
 (that also risk of freezing the UI).
-
-## Setup
-
-Make sure to install the dependencies
-
-```bash
-npm install
-```
-
-## Development
-
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-This will open the netlify dev entironment. To do so you need to login with the netlify cli
-
-```bash
-netlify login
-```
-
-## Test
-
-To run unit tests:
-
-```bash
-npm run test:unit
-npm run test:unit:watch # in watch mode
-```
-
-To run e2e tests:
-
-```bash
-npm run e2e
-npm run test:headless # in headless mode
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
 
 ## Deploy
 
