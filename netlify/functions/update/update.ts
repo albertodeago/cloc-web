@@ -2,6 +2,9 @@ import { Handler } from "@netlify/functions";
 const faunadb = require("faunadb");
 const q = faunadb.query;
 
+const environmentKey = "_ENVIRONMENT_";
+const numberOfCountsKey = "_NUMBER_OF_COUNTS_";
+
 const faunaSecret = process.env.FAUNADB_SECRET;
 const faunaDomain = process.env.FAUNADB_DOMAIN;
 const faunaDocumentId =
@@ -39,6 +42,7 @@ export const handler: Handler = async (event, context) => {
     );
     // console.log("Current values are: ", queryRes);
     const data = queryRes.data || {};
+    data[numberOfCountsKey] = data[numberOfCountsKey] || 1;
 
     // update the values
     const finalValues: any = {};
@@ -46,7 +50,7 @@ export const handler: Handler = async (event, context) => {
       finalValues[key] = value;
     });
     Object.entries(body.data || {}).forEach(([key, value]) => {
-      if (key !== "_ENVIRONMENT_") {
+      if (key !== environmentKey) {
         finalValues[key] = finalValues[key] ? finalValues[key] + value : value;
       }
     });
@@ -61,7 +65,7 @@ export const handler: Handler = async (event, context) => {
     );
     results = res.data;
     // @ts-ignore-next-line
-    delete results._ENVIRONMENT_;
+    delete results[environmentKey];
   } catch (error) {
     console.error("Failed to query the db", error);
     statusCode = 500;

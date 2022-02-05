@@ -2,6 +2,8 @@ import { Handler } from "@netlify/functions";
 const faunadb = require("faunadb");
 const q = faunadb.query;
 
+const environmentKey = "_ENVIRONMENT_";
+
 const faunaSecret = process.env.FAUNADB_SECRET;
 const faunaDomain = process.env.FAUNADB_DOMAIN;
 const faunaDocumentId =
@@ -26,7 +28,7 @@ export const handler: Handler = async (event, context) => {
     );
     results = data;
     // @ts-ignore-next-line
-    delete results._ENVIRONMENT_;
+    delete results[environmentKey];
   } catch (error) {
     console.error("Failed to query the db", error);
     statusCode = 500;
