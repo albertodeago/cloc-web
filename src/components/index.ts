@@ -1,3 +1,4 @@
+export * from "./head/Head";
 export * from "./title/Title";
 export * from "./button/Button";
 export * from "./checkbox/Checkbox";

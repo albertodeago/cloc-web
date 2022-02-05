@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import styles from "../styles/home.module.css";
 import { compare, Deferred, logger } from "../utils";
@@ -9,6 +8,7 @@ import {
   dirDefaultIgnoreList,
 } from "../cloc/ignoreList";
 import {
+  Head,
   Title,
   Button,
   SettingsIcon,
@@ -294,24 +294,7 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>CLOC-web</title>
-        {/* Inject a script to avoid theme flashing when user saved dark theme as its preference */}
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-            let theme = localStorage.getItem("theme");
-            if (theme !== "light" && theme !== "dark") {
-              theme = undefined;
-            }
-            if (theme) {
-              document.documentElement.setAttribute("data-theme", theme);
-            }
-            `,
-          }}
-        ></script>
-      </Head>
+      <Head />
       <InfoCorner />
       <Title />
       <ThemeToggle />

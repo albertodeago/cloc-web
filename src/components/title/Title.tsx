@@ -3,7 +3,7 @@ import styles from "./Title.module.css";
 
 function Title() {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} aria-label="Count Lines Of Code web">
       <div className={styles.letterContainer}>
         <h1 className={styles.firstLetter}>C</h1>
         <h2 className={styles.verticalText}>ount</h2>
