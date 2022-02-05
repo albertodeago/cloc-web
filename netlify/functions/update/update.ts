@@ -42,7 +42,9 @@ export const handler: Handler = async (event, context) => {
     );
     // console.log("Current values are: ", queryRes);
     const data = queryRes.data || {};
-    data[numberOfCountsKey] = data[numberOfCountsKey] || 1;
+    data[numberOfCountsKey] = data[numberOfCountsKey]
+      ? data[numberOfCountsKey] + 1
+      : 1;
 
     // update the values
     const finalValues: any = {};

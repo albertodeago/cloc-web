@@ -242,7 +242,6 @@ const Home: NextPage = () => {
   // };
 
   const cloc = async () => {
-    console.log("CLOC", numOfWorkers);
     if (numOfWorkers === 0) {
       await clocMainThread();
     } else {
