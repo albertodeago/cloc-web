@@ -147,8 +147,8 @@ const Home: NextPage = () => {
 
         // we need to wait for the web-workers to have set the dirHandle on its side
         await dirHandleWorkerDeferred.promise;
-        return dirHandle;
       }
+      return dirHandle;
     } catch (e) {
       logger.error("Something happened while selecting the project.");
     }

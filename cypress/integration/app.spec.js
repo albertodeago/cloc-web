@@ -3,7 +3,7 @@
 // If you're using ESLint on your project, we recommend installing the ESLint Cypress plugin instead:
 // https://github.com/cypress-io/eslint-plugin-cypress
 
-const appUrl = "http://localhost:3000";
+const appUrl = "http://localhost:3000/?panelbear_disable";
 
 const file1 = {
   kind: "file",
