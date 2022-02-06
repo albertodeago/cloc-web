@@ -61,7 +61,7 @@ const variants = {
     pathLength: 0,
     transition: {
       duration: 0.3,
-      delay: 1.3 - i * 0.4,
+      delay: 0.8 - i * 0.3, // 0.8 is the total animation time (with 3 icons it would be 1.2)
     },
   }),
 };
@@ -126,7 +126,7 @@ function InfoCorner() {
           </a>
 
           {/* info icon */}
-          <svg className={styles.infoIcon} viewBox="0 0 24 24">
+          {/* <svg className={styles.infoIcon} viewBox="0 0 24 24">
             <motion.path
               d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 18h-2v-8h2v8zm-1-12.25c.69 0 1.25.56 1.25 1.25s-.56 1.25-1.25 1.25-1.25-.56-1.25-1.25.56-1.25 1.25-1.25z"
               fill="transparent"
@@ -135,7 +135,7 @@ function InfoCorner() {
               variants={shouldReduceMotion ? variantsNoMotion : variants}
               custom={3}
             />
-          </svg>
+          </svg> */}
         </motion.nav>
       </div>
     </div>
