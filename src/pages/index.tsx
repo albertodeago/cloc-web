@@ -19,6 +19,7 @@ import {
   HistogramChart,
   ThemeToggle,
   ConfigurationPanel,
+  UnsupportedDevice,
 } from "../components";
 import { WorkerMessage } from "../types";
 import { motion } from "framer-motion";
@@ -50,6 +51,7 @@ const logResponse = (
 };
 
 const Home: NextPage = () => {
+  const [isDeviceSupported, setIsDeviceSupported] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [countedFiles, setCountedFiles] = useState<number>(0);
   const [countedLines, setCountedLines] = useState<number>(0);
@@ -278,6 +280,12 @@ const Home: NextPage = () => {
   useEffect(() => {
     // create web worker client side
     if (typeof window !== "undefined") {
+      if ("showDirectoryPicker" in window) {
+        setIsDeviceSupported(true);
+      } else {
+        setIsDeviceSupported(false);
+      }
+
       worker = new Worker(new URL("../workers/main.ts", import.meta.url));
       worker.addEventListener("message", onWorkerMessage);
 
@@ -299,11 +307,12 @@ const Home: NextPage = () => {
       <ThemeToggle />
 
       <main className={styles.mainContent}>
-        <AllowMessage />
+        {isDeviceSupported ? (
+          <>
+            <AllowMessage />
+            {/* <button onClick={() => getDirHandle()}>Select project</button> */}
 
-        {/* <button onClick={() => getDirHandle()}>Select project</button> */}
-
-        {/* <button disabled={loading} className={styles.clocButton} onClick={clocMainThread}>
+            {/* <button disabled={loading} className={styles.clocButton} onClick={clocMainThread}>
           CLOC of a project (main thread)
         </button>
         <button disabled={loading} className={styles.clocButton} onClick={clocSingleWorker}>
@@ -312,54 +321,62 @@ const Home: NextPage = () => {
         <button disabled={loading} className={styles.clocButton} onClick={clocLineWorkers}>
           CLOC of a project (line workers)
         </button> */}
-        {/* <Button
+            {/* <Button
           disabled={loading}
           onClick={clocFileWorkers}
           text="CLOC of a project (file workers)"
         /> */}
-        <div className={styles.buttonWrapper}>
-          <Button disabled={loading} onClick={cloc} text=" CLOC of a project" />
-          <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />
-        </div>
+            <div className={styles.buttonWrapper}>
+              <Button
+                disabled={loading}
+                onClick={cloc}
+                text=" CLOC of a project"
+              />
+              <SettingsIcon isOpened={isOpened} setIsOpened={setIsOpened} />
+            </div>
 
-        <ConfigurationPanel
-          isOpened={isOpened}
-          numOfWorkers={numOfWorkers}
-          setNumOfWorkers={setNumOfWorkers}
-          isLogActive={isLogActive}
-          setIsLogActive={setIsLogActive}
-          fileBlackList={fileBlackList}
-          setFileBlackList={setFileBlackList}
-          dirBlackList={dirBlackList}
-          setDirBlackList={setDirBlackList}
-        />
+            <ConfigurationPanel
+              isOpened={isOpened}
+              numOfWorkers={numOfWorkers}
+              setNumOfWorkers={setNumOfWorkers}
+              isLogActive={isLogActive}
+              setIsLogActive={setIsLogActive}
+              fileBlackList={fileBlackList}
+              setFileBlackList={setFileBlackList}
+              dirBlackList={dirBlackList}
+              setDirBlackList={setDirBlackList}
+            />
 
-        <div>
-          {loading ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              style={{ paddingTop: "1rem", paddingBottom: "5rem" }}
-            >
-              <Clock />
-            </motion.div>
-          ) : (
-            countedFiles !== 0 &&
-            countedLines !== 0 && (
-              <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-                <TotalResultsLabel
-                  countedFiles={countedFiles}
-                  countedLines={countedLines}
-                  elapsedTime={elapsedTime}
-                />
-                <HistogramChart
-                  counters={counters}
-                  normalizedCounters={normalizedCounters}
-                />
-              </motion.div>
-            )
-          )}
-        </div>
+            <div>
+              {loading ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  style={{ paddingTop: "1rem", paddingBottom: "5rem" }}
+                >
+                  <Clock />
+                </motion.div>
+              ) : (
+                countedFiles !== 0 &&
+                countedLines !== 0 && (
+                  <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+                    <TotalResultsLabel
+                      countedFiles={countedFiles}
+                      countedLines={countedLines}
+                      elapsedTime={elapsedTime}
+                    />
+                    <HistogramChart
+                      counters={counters}
+                      normalizedCounters={normalizedCounters}
+                    />
+                  </motion.div>
+                )
+              )}
+            </div>
+          </>
+        ) : (
+          <UnsupportedDevice />
+        )}
       </main>
     </div>
   );

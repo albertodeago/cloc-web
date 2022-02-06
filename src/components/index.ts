@@ -12,3 +12,4 @@ export * from "./theme-toggle/ThemeToggle";
 export * from "./black-list/BlackList";
 export * from "./input-range/InputRange";
 export * from "./configuration-panel/ConfigurationPanel";
+export * from "./unsupported-device/UnsupportedDevice";
