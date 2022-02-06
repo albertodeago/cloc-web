@@ -2,7 +2,8 @@ import { getFileContent } from "../utils";
 
 self.onmessage = async function (e) {
   if (e.data.cmd !== "count-files") {
-    throw new Error("[FileCounterWorker] - Unknown command: " + e.data.cmd);
+    console.error("[FileCounterWorker] - Unknown command: " + e.data.cmd);
+    return;
   }
 
   const lines = await countLines(e.data.payload);

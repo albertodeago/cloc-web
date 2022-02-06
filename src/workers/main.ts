@@ -35,7 +35,8 @@ self.onmessage = async function (e: MessageEvent) {
     case "cloc-req-single-worker":
       // In this case we use the current worker to process the request
       if (!dirHandle) {
-        throw new Error("dirHandle is null");
+        logger.error(`[MainWorker] - Dirrectory handle not set`);
+        return;
       }
 
       logger.info(`[MainWorker] Running cloc on this MainWorker`);
@@ -56,7 +57,8 @@ self.onmessage = async function (e: MessageEvent) {
 
     case "cloc-req-line-workers":
       if (!dirHandle) {
-        throw new Error("dirHandle is null");
+        logger.error(`[MainWorker] - Dirrectory handle not set`);
+        return;
       }
       // This will read all the files and send their content to other workers.
       // These workers will then run cloc on each file and send the results back to this one.
@@ -71,7 +73,8 @@ self.onmessage = async function (e: MessageEvent) {
 
     case "cloc-req-file-workers":
       if (!dirHandle) {
-        throw new Error("dirHandle is null");
+        logger.error(`[MainWorker] - Dirrectory handle not set`);
+        return;
       }
       // This will read all the files and send their content to other workers.
       // These workers will then run cloc on each file and send the results back to this one.
@@ -93,7 +96,8 @@ self.onmessage = async function (e: MessageEvent) {
 
     case "cloc-req-v4":
       if (!dirHandle) {
-        throw new Error("dirHandle is null");
+        logger.error(`[MainWorker] - Dirrectory handle not set`);
+        return;
       }
       // spawn a worker that is responsible to iterate through the file system. For each file that he find, increment the
       // number of workers to wait and send the filehandle to a new/free worker.
@@ -105,6 +109,7 @@ self.onmessage = async function (e: MessageEvent) {
       break;
 
     default:
-      throw new Error(`Unknown command: ${data.cmd}`);
+      logger.error(`[MainWorker] - Unknown command: ${data.cmd}`);
+      return;
   }
 };

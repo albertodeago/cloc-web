@@ -3,7 +3,8 @@ import { getFileContent, getExtension, logger } from "../utils";
 self.onmessage = async function (e) {
   const { id, cmd, fileName, fileHandle } = e.data;
   if (cmd !== "count-files") {
-    throw new Error("[FileCounterWorker] - Unknown command: " + cmd);
+    logger.error("[FileCounterWorker] - Unknown command: " + cmd);
+    return;
   }
   logger.info(`[Worker ${id}] - Counting ${fileName}`);
 

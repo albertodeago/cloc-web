@@ -132,11 +132,8 @@ const Home: NextPage = () => {
   };
 
   const getDirHandle = async (sendToWorker = true) => {
-    const dh = await window.showDirectoryPicker();
-    if (!dh) {
-      alert("You must select the directory of a project");
-      return;
-    } else {
+    try {
+      const dh = await window.showDirectoryPicker();
       logger.info("[MainThread] Directory handle received");
       dirHandle = dh;
 
@@ -150,12 +147,18 @@ const Home: NextPage = () => {
 
         // we need to wait for the web-workers to have set the dirHandle on its side
         await dirHandleWorkerDeferred.promise;
+        return dirHandle;
       }
+    } catch (e) {
+      logger.error("Something happened while selecting the project.");
     }
   };
 
   const clocMainThread = async () => {
-    await getDirHandle(false);
+    const dh = await getDirHandle(false);
+    if (!dh) {
+      return;
+    }
     resetValues();
 
     setLoading(true);
@@ -206,7 +209,10 @@ const Home: NextPage = () => {
   // };
 
   const clocFileWorkers = async () => {
-    await getDirHandle();
+    const dh = await getDirHandle();
+    if (!dh) {
+      return;
+    }
     resetValues();
 
     setLoading(true);
