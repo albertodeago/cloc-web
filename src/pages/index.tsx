@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
+import * as Panelbear from "@panelbear/panelbear-js";
 import styles from "../styles/home.module.css";
 import { compare, Deferred, logger } from "../utils";
 import { run } from "../cloc";
@@ -255,6 +256,7 @@ const Home: NextPage = () => {
     } else {
       await clocFileWorkers();
     }
+    Panelbear.track("cloc");
   };
 
   const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
