@@ -305,7 +305,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     logger.setLogLevel(isLogActive ? "info" : "none");
-    throw new Error("FromNetlify");
   }, [isLogActive]);
 
   return (
