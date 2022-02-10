@@ -23,8 +23,8 @@
 #     [plugins.inputs]
 #         enable = false
 # # To enable using cache between builds, create a CYPRESS_CACHE_FOLDER and place the Cypress binary inside the node_modules folder.
-# [[plugins]]
-#   package = "@sentry/netlify-build-plugin"
-#   [plugins.inputs]
-#     sentryOrg = "albertodeago"
-#     sentryProject = "cloc-web"
+[[plugins]]
+  package = "@sentry/netlify-build-plugin"
+  [plugins.inputs]
+    sentryOrg = "albertodeago"
+    sentryProject = "cloc-web"
