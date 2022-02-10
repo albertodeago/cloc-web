@@ -18,8 +18,6 @@ const initConfiguration = (payload: WorkerConfiguration) => {
   isLogActive = payload.isLogActive;
 };
 
-throw new Error("FromWorker");
-
 self.onmessage = async function (e: MessageEvent) {
   let data = e.data as WorkerMessage;
   logger.info(`[MainWorker] Message ${data.cmd} received`);
