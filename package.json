@@ -1,5 +1,6 @@
 {
   "name": "cloc-web",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "BROWSER=none netlify dev",
@@ -18,6 +19,8 @@
   "dependencies": {
     "@netlify/functions": "^0.10.0",
     "@panelbear/panelbear-nextjs": "^1.0.3",
+    "@sentry/browser": "^6.17.6",
+    "@sentry/tracing": "^6.17.6",
     "@types/wicg-file-system-access": "^2020.9.4",
     "faunadb": "^4.4.1",
     "framer-motion": "^5.5.5",
