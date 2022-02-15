@@ -59,9 +59,13 @@ const createWorkers = () => {
       const { id, ext, lines } = e.data.payload;
       logger.info(`Worker ${id} finished counting ${ext}. ${lines} lines`);
 
-      const currentVal = results.cloc.get(ext) || 0;
-      results.cloc.set(ext, currentVal + lines);
       results.countedFiles++;
+
+      // don't consider file without extension
+      if (ext !== "NO-EXTENSION") {
+        const currentVal = results.cloc.get(ext) || 0;
+        results.cloc.set(ext, currentVal + lines);
+      }
 
       if (results.countedFiles === filesToCount) {
         logger.info(

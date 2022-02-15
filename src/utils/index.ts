@@ -47,7 +47,7 @@ export async function getFileContent(
 export function getExtension(fileName: string): string {
   const splitName = fileName.split(".");
   if (splitName.length === 1 || splitName[0] === "") {
-    return "no-extension";
+    return "NO-EXTENSION";
   }
 
   const extension = splitName.pop() as string;

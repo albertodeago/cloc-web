@@ -49,6 +49,9 @@ const run = async function (
 
   await cloc(dirHandle, results, dirIgnoreList, fileIgnoreList);
 
+  // ignore no-extensions file
+  results.cloc.delete("NO-EXTENSION");
+
   return results;
 };
 

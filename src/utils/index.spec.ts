@@ -55,7 +55,7 @@ describe("Utils", () => {
       expect(getExtension("test.worker.js")).toBe("js");
     });
     it("should return 'no-extension' when the file has no extension", () => {
-      expect(getExtension("test")).toBe("no-extension");
+      expect(getExtension("test")).toBe("NO-EXTENSION");
     });
   });
 

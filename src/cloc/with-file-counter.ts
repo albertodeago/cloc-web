@@ -175,7 +175,9 @@ const runWithFileCounters = async function (
   }
 
   const res = await Promise.all(results.promises);
-  res.forEach(({ ext, lines }) => {
+  const resWithExtension = res.filter((a) => a.ext !== "NO-EXTENSION");
+
+  resWithExtension.forEach(({ ext, lines }) => {
     const amounfPerExt = results.cloc.get(ext) || 0;
     results.cloc.set(ext, amounfPerExt + lines);
   });

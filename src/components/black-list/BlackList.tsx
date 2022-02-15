@@ -30,8 +30,8 @@ export function BlackList({ type, list, setList }: BlackListProps) {
   return (
     <div className="blacklist">
       <p>
-        {type === "file" ? "File" : "Directory"} ignore list (use / if to use
-        RegExp):
+        {type === "file" ? "File" : "Directory"} ignore list (use /pattern/ to
+        use RegExp):
       </p>
       <div className={styles.inputWrapper} data-test-id={`ignorelist-${type}`}>
         <input
