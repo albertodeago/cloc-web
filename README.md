@@ -1,5 +1,7 @@
 # Cloc-web
 
+[Link to app](https://cloc-web.netlify.app/)
+
 This is a (simple) web version of [CLOC](https://en.wikipedia.org/wiki/Source_lines_of_code) (count lines of code).
 
 The objective of this project is to implement a simple CLOC application using
