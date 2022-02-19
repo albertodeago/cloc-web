@@ -70,11 +70,23 @@ or newer ones:
 - [new made in Rust](https://github.com/XAMPPRocky/tokei)
 - [new made in Go](https://github.com/boyter/scc)
 
-## Benchmarks / History
+## Benchmarks with the latest version
 
-Consider that all the results here are taken on my machine and they sure are not
-perfect nor precise by any means, I just took these numbers to compare different
-solutions and use the one that looked most efficient (at least on my machine).
+Counting the next.js repo -> 9,349 files and 1,086,109 lines of code
+
+- with 8 workers: 5734ms 6240ms 6274ms
+- with 4 workers: 7673ms 7769ms 7021ms
+- in main thread: 7565ms 6948ms 8165ms
+
+The difference is not huge, but with 8 workers the performance seems a little
+better, and plus there is no overhead in the main thread.
+
+## Experiments / history of project
+
+Consider that all the results here are taken on my machine (and not with the
+latest version of this project) and they sure are not perfect nor precise by
+any means, I just took these numbers to compare different solutions and use
+the one that looked most efficient (at least from my tests).
 
 I implemented different versions of this and compared them to see what seems to
 be the best approach.  
