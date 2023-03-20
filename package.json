@@ -17,6 +17,7 @@
     "e2e:headless": "start-server-and-test dev http://localhost:3000 cypress:headless"
   },
   "dependencies": {
+    "@cronitorio/cronitor-rum-nextjs": "^0.2.1",
     "@netlify/functions": "^0.10.0",
     "@panelbear/panelbear-nextjs": "^1.0.3",
     "@sentry/browser": "^6.17.6",
@@ -24,21 +25,22 @@
     "@types/wicg-file-system-access": "^2020.9.4",
     "faunadb": "^4.4.1",
     "framer-motion": "^5.5.5",
-    "next": "12.0.7",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "5.16.1",
-    "@testing-library/react": "12.1.2",
-    "@testing-library/user-event": "13.5.0",
+    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/react": "14.0.0",
+    "@testing-library/user-event": "14.4.3",
     "@types/node": "^14.18.7",
-    "@types/react": "17.0.37",
+    "@types/react": "18.0.28",
     "babel-jest": "27.4.5",
     "cypress": "^9.3.1",
     "eslint": "8.5.0",
-    "eslint-config-next": "12.0.7",
+    "eslint-config-next": "13.2.4",
     "jest": "27.4.5",
+    "netlify-cli": "^13.1.3",
     "netlify-plugin-cypress": "^2.2.0",
     "start-server-and-test": "1.13.1",
     "typescript": "4.5.4"
