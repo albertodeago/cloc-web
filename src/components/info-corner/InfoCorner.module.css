@@ -11,6 +11,10 @@
   border-radius: 50%;
 }
 
+.nav {
+  min-width: 40px;
+}
+
 .items {
   position: absolute;
   bottom: 20%;
@@ -48,16 +52,20 @@
 .twitterIcon {
   top: 70px;
   left: -72px;
-  transform: rotate(80deg);
   width: 40px;
   height: 40px;
+}
+.twitterIcon > svg {
+  transform: rotate(80deg);
 }
 .githubIcon {
   top: 70px;
   left: -25px;
-  transform: rotate(25deg);
   width: 40px;
   height: 44px;
+}
+.githubIcon > svg {
+  transform: rotate(25deg);
 }
 /* .infoIcon {
   top: 89px;

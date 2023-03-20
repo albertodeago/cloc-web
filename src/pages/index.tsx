@@ -1,13 +1,14 @@
-import type { NextPage } from "next";
-import React, { useEffect, useState } from "react";
-import * as Panelbear from "@panelbear/panelbear-js";
-import styles from "../styles/home.module.css";
-import { compare, Deferred, logger } from "../utils";
-import { run } from "../cloc";
+import type { NextPage } from 'next';
+import React, { useEffect, useState } from 'react';
+import * as Panelbear from '@panelbear/panelbear-js';
+import * as Cronitor from '@cronitorio/cronitor-rum-js';
+import styles from '../styles/home.module.css';
+import { compare, Deferred, logger } from '../utils';
+import { run } from '../cloc';
 import {
   fileDefaultIgnoreList,
   dirDefaultIgnoreList,
-} from "../cloc/ignoreList";
+} from '../cloc/ignoreList';
 import {
   Head,
   Title,
@@ -21,9 +22,9 @@ import {
   ThemeToggle,
   ConfigurationPanel,
   UnsupportedDevice,
-} from "../components";
-import { WorkerMessage } from "../types";
-import { motion } from "framer-motion";
+} from '../components';
+import { WorkerMessage } from '../types';
+import { motion } from 'framer-motion';
 
 // main worker reference
 let worker: Worker;
@@ -92,7 +93,7 @@ const Home: NextPage = () => {
 
     if (clocRes.size === 0) {
       logger.info(
-        "No results, maybe the project is empty? Or everything was in ignore list"
+        'No results, maybe the project is empty? Or everything was in ignore list'
       );
       // TODO: show a message to the user
       return;
@@ -126,8 +127,8 @@ const Home: NextPage = () => {
     clocRes.forEach((v, k) => {
       clocObj[k] = v;
     });
-    fetch("/.netlify/functions/update", {
-      method: "POST",
+    fetch('/.netlify/functions/update', {
+      method: 'POST',
       body: JSON.stringify({ data: clocObj }),
     });
   };
@@ -135,13 +136,13 @@ const Home: NextPage = () => {
   const getDirHandle = async (sendToWorker = true) => {
     try {
       const dh = await window.showDirectoryPicker();
-      logger.info("[MainThread] Directory handle received");
+      logger.info('[MainThread] Directory handle received');
       dirHandle = dh;
 
       if (sendToWorker) {
         dirHandleWorkerDeferred = new Deferred();
         const msg: WorkerMessage = {
-          cmd: "set-dir-handle",
+          cmd: 'set-dir-handle',
           payload: dirHandle,
         };
         worker.postMessage(msg);
@@ -151,7 +152,7 @@ const Home: NextPage = () => {
       }
       return dirHandle;
     } catch (e) {
-      logger.error("Something happened while selecting the project.");
+      logger.error('Something happened while selecting the project.');
     }
   };
 
@@ -218,7 +219,7 @@ const Home: NextPage = () => {
 
     setLoading(true);
     const msg: WorkerMessage = {
-      cmd: "cloc-req-file-workers",
+      cmd: 'cloc-req-file-workers',
       payload: {
         numOfWorkers: numOfWorkers,
         isLogActive: isLogActive,
@@ -256,15 +257,16 @@ const Home: NextPage = () => {
     } else {
       await clocFileWorkers();
     }
-    Panelbear.track("cloc");
+    Panelbear.track('cloc');
+    Cronitor.track('cloc');
   };
 
   const onWorkerMessage = async ({ data }: { data: WorkerMessage }) => {
-    if (data.cmd === "dir-handle-set") {
-      logger.info("[MainThread] Directory handle set on worker side");
+    if (data.cmd === 'dir-handle-set') {
+      logger.info('[MainThread] Directory handle set on worker side');
       dirHandleWorkerDeferred.resolve();
-    } else if (data.cmd === "cloc-response") {
-      logger.info("[MainThread] CLOC response received");
+    } else if (data.cmd === 'cloc-response') {
+      logger.info('[MainThread] CLOC response received');
       endTime = performance.now();
       let totalLinesOfCode = 0;
       data.payload.cloc.forEach((v) => (totalLinesOfCode += v));
@@ -287,24 +289,24 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     // create web worker client side
-    if (typeof window !== "undefined") {
-      if ("showDirectoryPicker" in window) {
+    if (typeof window !== 'undefined') {
+      if ('showDirectoryPicker' in window) {
         setIsDeviceSupported(true);
       } else {
         setIsDeviceSupported(false);
       }
 
-      worker = new Worker(new URL("../workers/main.ts", import.meta.url));
-      worker.addEventListener("message", onWorkerMessage);
+      worker = new Worker(new URL('../workers/main.ts', import.meta.url));
+      worker.addEventListener('message', onWorkerMessage);
 
-      fetch("/.netlify/functions/get-data")
+      fetch('/.netlify/functions/get-data')
         .then((res) => res.json())
         .then((res) => console.log(res));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    logger.setLogLevel(isLogActive ? "info" : "none");
+    logger.setLogLevel(isLogActive ? 'info' : 'none');
   }, [isLogActive]);
 
   return (
@@ -360,7 +362,7 @@ const Home: NextPage = () => {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  style={{ paddingTop: "1rem", paddingBottom: "5rem" }}
+                  style={{ paddingTop: '1rem', paddingBottom: '5rem' }}
                 >
                   <Clock />
                 </motion.div>
