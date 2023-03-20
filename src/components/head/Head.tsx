@@ -1,5 +1,5 @@
-import { memo } from "react";
-import Head from "next/head";
+import { memo } from 'react';
+import Head from 'next/head';
 
 function AppHead() {
   return (
@@ -22,7 +22,7 @@ function AppHead() {
         type="text/javascript"
         dangerouslySetInnerHTML={{
           __html: `
-            let theme = localStorage.getItem("theme");
+            var theme = localStorage.getItem("theme");
             if (theme !== "light" && theme !== "dark") {
               theme = undefined;
             }
