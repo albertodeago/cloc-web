@@ -1,6 +1,5 @@
 import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import * as Panelbear from '@panelbear/panelbear-js';
 import * as Cronitor from '@cronitorio/cronitor-rum-js';
 import styles from '../styles/home.module.css';
 import { compare, Deferred, logger } from '../utils';
@@ -257,7 +256,6 @@ const Home: NextPage = () => {
     } else {
       await clocFileWorkers();
     }
-    Panelbear.track('cloc');
     Cronitor.track('cloc');
   };
 

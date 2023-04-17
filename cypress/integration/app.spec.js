@@ -3,39 +3,39 @@
 // If you're using ESLint on your project, we recommend installing the ESLint Cypress plugin instead:
 // https://github.com/cypress-io/eslint-plugin-cypress
 
-const appUrl = "http://localhost:3000/?panelbear_disable";
+const appUrl = 'http://localhost:3000/';
 
 const file1 = {
-  kind: "file",
-  name: "file1.js",
+  kind: 'file',
+  name: 'file1.js',
   getFile: async () => ({
-    text: async () => "file 1 1 lines.",
+    text: async () => 'file 1 1 lines.',
   }),
 };
 const file2 = {
-  kind: "file",
-  name: "file2.ts",
+  kind: 'file',
+  name: 'file2.ts',
   getFile: async () => ({
-    text: async () => "file 2.\n2 lines",
+    text: async () => 'file 2.\n2 lines',
   }),
 };
 const file3 = {
-  kind: "file",
-  name: "file3.md",
+  kind: 'file',
+  name: 'file3.md',
   getFile: async () => ({
-    text: async () => "file 3.\n3 \nlines",
+    text: async () => 'file 3.\n3 \nlines',
   }),
 };
 const file4 = {
-  kind: "file",
-  name: "file4.ts",
+  kind: 'file',
+  name: 'file4.ts',
   getFile: async () => ({
-    text: async () => "file\n 4.\n4 \nlines",
+    text: async () => 'file\n 4.\n4 \nlines',
   }),
 };
 const dir1 = {
-  kind: "directory",
-  name: "dir1",
+  kind: 'directory',
+  name: 'dir1',
   entries: () => ({
     async *[Symbol.asyncIterator]() {
       yield [file1.name, file1];
@@ -44,8 +44,8 @@ const dir1 = {
   }),
 };
 const dir2 = {
-  kind: "directory",
-  name: "dir2",
+  kind: 'directory',
+  name: 'dir2',
   entries: () => ({
     async *[Symbol.asyncIterator]() {
       yield [file3.name, file3];
@@ -67,156 +67,156 @@ const clocAndCheck = (text) => {
   cy.get('input[type="range"]')
     .eq(0)
     .then((input) => {
-      cy.controlledInputChange(input, "0");
+      cy.controlledInputChange(input, '0');
     })
-    .get("button")
-    .contains("CLOC of a project")
+    .get('button')
+    .contains('CLOC of a project')
     .click()
     .get("[data-test-id='results-label']")
     .contains(text);
 };
 
-describe("CLOC-WEB application", () => {
+describe('CLOC-WEB application', () => {
   beforeEach(() => {
     // Mock netlify function to avoid polluting data
-    cy.intercept("POST", "/.netlify/functions/update", {
+    cy.intercept('POST', '/.netlify/functions/update', {
       statusCode: 200,
       body: {
         ts: 6,
         md: 3,
         js: 1,
       },
-    }).as("updateData");
+    }).as('updateData');
 
     cy.visit(appUrl, {
       onBeforeLoad: (win) => {
         // consoleSpy = cy.spy(win.console, "log").as("consoleSpy");
-        cy.stub(win, "showDirectoryPicker")
+        cy.stub(win, 'showDirectoryPicker')
           .resolves(dirHandle)
-          .as("showDirectoryPicker");
+          .as('showDirectoryPicker');
       },
     });
   });
 
-  it("should contains the title", () => {
-    cy.get("h1").contains("C");
-    cy.get("h1").contains("L");
-    cy.get("h1").contains("O");
-    cy.get("h1").contains("C");
-    cy.get("h1").contains("-");
-    cy.get("h1").contains("W");
-    cy.get("h1").contains("E");
-    cy.get("h1").contains("B");
+  it('should contains the title', () => {
+    cy.get('h1').contains('C');
+    cy.get('h1').contains('L');
+    cy.get('h1').contains('O');
+    cy.get('h1').contains('C');
+    cy.get('h1').contains('-');
+    cy.get('h1').contains('W');
+    cy.get('h1').contains('E');
+    cy.get('h1').contains('B');
   });
 
-  it("should be able to change theme", () => {
-    cy.get("body").should("have.css", "background-color", "rgb(255, 255, 255)");
+  it('should be able to change theme', () => {
+    cy.get('body').should('have.css', 'background-color', 'rgb(255, 255, 255)');
     cy.get("[data-test-id='theme-toggle']").click();
-    cy.get("body").should("have.css", "background-color", "rgb(34, 34, 34)");
+    cy.get('body').should('have.css', 'background-color', 'rgb(34, 34, 34)');
   });
 
-  it("should be able to CLOC a project", () => {
+  it('should be able to CLOC a project', () => {
     cy.get("[data-test-id='settings-icon']").click();
-    clocAndCheck("Counted 4 files and 10 lines of code");
+    clocAndCheck('Counted 4 files and 10 lines of code');
   });
 
   // it("should have links towards github, twitter and TODO");
 
-  describe("should be able to customize algorithm", () => {
-    it("should be able to customize ignore directory (with RegExp)", () => {
+  describe('should be able to customize algorithm', () => {
+    it('should be able to customize ignore directory (with RegExp)', () => {
       cy.get("[data-test-id='settings-icon']").click();
       const firstIgnoreText = cy
         .get("[data-test-id='ignorelist-directory-item']")
         .first()
-        .its("text");
+        .its('text');
       const firstIgnore = cy
         .get("[data-test-id='ignorelist-directory-item']")
         .first();
       firstIgnore.find("[data-test-id='ignorelist-directory-remove']").click();
 
       cy.get("[data-test-id='ignorelist-directory-input']")
-        .type("/ir1$/")
-        .type("{enter}");
+        .type('/ir1$/')
+        .type('{enter}');
 
       cy.get("[data-test-id='ignorelist-directory-item']")
         .first()
-        .should("not.contain", firstIgnoreText);
+        .should('not.contain', firstIgnoreText);
 
       cy.get("[data-test-id='ignorelist-directory-item']")
         .last()
-        .should("contain", "/ir1$/");
+        .should('contain', '/ir1$/');
 
-      clocAndCheck("Counted 2 files and 7 lines of code");
+      clocAndCheck('Counted 2 files and 7 lines of code');
     });
 
-    it("should be able to customize ignore directory (with pattern matching)", () => {
+    it('should be able to customize ignore directory (with pattern matching)', () => {
       cy.get("[data-test-id='settings-icon']").click();
       const firstIgnoreText = cy
         .get("[data-test-id='ignorelist-directory-item']")
         .first()
-        .its("text");
+        .its('text');
       const firstIgnore = cy
         .get("[data-test-id='ignorelist-directory-item']")
         .first();
       firstIgnore.find("[data-test-id='ignorelist-directory-remove']").click();
 
       cy.get("[data-test-id='ignorelist-directory-input']")
-        .type("ir1")
-        .type("{enter}");
+        .type('ir1')
+        .type('{enter}');
 
       cy.get("[data-test-id='ignorelist-directory-item']")
         .first()
-        .should("not.contain", firstIgnoreText);
+        .should('not.contain', firstIgnoreText);
 
       cy.get("[data-test-id='ignorelist-directory-item']")
         .last()
-        .should("contain", "ir1");
+        .should('contain', 'ir1');
 
-      clocAndCheck("Counted 2 files and 7 lines of code");
+      clocAndCheck('Counted 2 files and 7 lines of code');
     });
 
-    it("should be able to customize ignore file (with RegExp)", () => {
+    it('should be able to customize ignore file (with RegExp)', () => {
       cy.get("[data-test-id='settings-icon']").click();
       const firstIgnoreText = cy
         .get("[data-test-id='ignorelist-file-item']")
         .first()
-        .its("text");
+        .its('text');
       const firstIgnore = cy
         .get("[data-test-id='ignorelist-file-item']")
         .first();
       firstIgnore.find("[data-test-id='ignorelist-file-remove']").click();
 
       cy.get("[data-test-id='ignorelist-file-input']")
-        .type("/.*\\.md/")
-        .type("{enter}");
+        .type('/.*\\.md/')
+        .type('{enter}');
 
       cy.get("[data-test-id='ignorelist-file-item']")
         .first()
-        .should("not.contain", firstIgnoreText);
+        .should('not.contain', firstIgnoreText);
 
-      clocAndCheck("Counted 3 files and 7 lines of code");
+      clocAndCheck('Counted 3 files and 7 lines of code');
     });
 
-    it("should be able to customize ignore file (with pattern matching)", () => {
+    it('should be able to customize ignore file (with pattern matching)', () => {
       cy.get("[data-test-id='settings-icon']").click();
       const firstIgnoreText = cy
         .get("[data-test-id='ignorelist-file-item']")
         .first()
-        .its("text");
+        .its('text');
       const firstIgnore = cy
         .get("[data-test-id='ignorelist-file-item']")
         .first();
       firstIgnore.find("[data-test-id='ignorelist-file-remove']").click();
 
       cy.get("[data-test-id='ignorelist-file-input']")
-        .type("file1")
-        .type("{enter}");
+        .type('file1')
+        .type('{enter}');
 
       cy.get("[data-test-id='ignorelist-file-item']")
         .first()
-        .should("not.contain", firstIgnoreText);
+        .should('not.contain', firstIgnoreText);
 
-      clocAndCheck("Counted 3 files and 9 lines of code");
+      clocAndCheck('Counted 3 files and 9 lines of code');
     });
 
     // it("should be able to turn on logs", () => {
@@ -238,26 +238,26 @@ describe("CLOC-WEB application", () => {
     //   cy.get("@consoleSpy").should("have.been.calledWith", "CLOC of a project");
     // });
 
-    it("should be able to customize workers", () => {
+    it('should be able to customize workers', () => {
       cy.get("[data-test-id='settings-icon']").click();
 
       cy.get('input[type="range"]')
         .eq(0)
         .then((input) => {
-          cy.controlledInputChange(input, "16");
+          cy.controlledInputChange(input, '16');
         });
     });
   });
 
-  it("should send counted results to the server", () => {
+  it('should send counted results to the server', () => {
     cy.get("[data-test-id='settings-icon']").click();
     cy.get('input[type="range"]')
       .eq(0)
       .then((input) => {
-        cy.controlledInputChange(input, "0");
+        cy.controlledInputChange(input, '0');
       })
-      .get("button")
-      .contains("CLOC of a project")
+      .get('button')
+      .contains('CLOC of a project')
       .click()
       .get("[data-test-id='results-label']")
       .contains(`Counted 4 files and 10 lines of code`);
@@ -265,11 +265,11 @@ describe("CLOC-WEB application", () => {
     cy.get("[data-test-id='results-label']").contains(
       `Counted 4 files and 10 lines of code`
     );
-    cy.wait("@updateData")
-      .its("request.body")
-      .should("equal", '{"data":{"js":1,"ts":6,"md":3}}');
+    cy.wait('@updateData')
+      .its('request.body')
+      .should('equal', '{"data":{"js":1,"ts":6,"md":3}}');
 
-    cy.get("@updateData").its("response.body").should("deep.equal", {
+    cy.get('@updateData').its('response.body').should('deep.equal', {
       js: 1,
       md: 3,
       ts: 6,

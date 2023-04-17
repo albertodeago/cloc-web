@@ -1,4 +1,3 @@
-import { usePanelbear } from '@panelbear/panelbear-nextjs';
 import { useCronitor } from '@cronitorio/cronitor-rum-nextjs';
 import '../styles/reset.css';
 import '../styles/theme.css';
@@ -19,10 +18,7 @@ Sentry.init({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // Load Panelbear only once during the app lifecycle
-  usePanelbear('Ah30xQJSiNU', {
-    debug: process.env.NODE_ENV !== 'production',
-  });
+  // Load Cronitor only once during the app lifecycle
   useCronitor('02e7a13d26cbf9eadbc361ca2ddd0d7b');
 
   return <Component {...pageProps} />;

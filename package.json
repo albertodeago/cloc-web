@@ -19,7 +19,6 @@
   "dependencies": {
     "@cronitorio/cronitor-rum-nextjs": "^0.2.1",
     "@netlify/functions": "^0.10.0",
-    "@panelbear/panelbear-nextjs": "^1.0.3",
     "@sentry/browser": "^6.17.6",
     "@sentry/tracing": "^6.17.6",
     "@types/wicg-file-system-access": "^2020.9.4",
