@@ -9,6 +9,8 @@ WebWorkers to keep the UI interactive and the new
 [WebFileSystemAPI](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
 to let the user select the project from the local file-system.
 
+<a href="https://www.buymeacoffee.com/albertodeago" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## Propose new default ignore patterns
 
 Just [open a PR](https://github.com/albertodeago/cloc-web/pulls) changing the [ignore file](https://github.com/albertodeago/cloc-web/blob/main/src/cloc/ignoreList.ts).  
