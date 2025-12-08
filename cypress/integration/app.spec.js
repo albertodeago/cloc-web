@@ -78,15 +78,15 @@ const clocAndCheck = (text) => {
 
 describe('CLOC-WEB application', () => {
   beforeEach(() => {
-    // Mock netlify function to avoid polluting data
-    cy.intercept('POST', '/.netlify/functions/update', {
-      statusCode: 200,
-      body: {
-        ts: 6,
-        md: 3,
-        js: 1,
-      },
-    }).as('updateData');
+    // Mock netlify function to avoid polluting data - we don't do that anymore because FaunaDB is dead
+    // cy.intercept('POST', '/.netlify/functions/update', {
+    //   statusCode: 200,
+    //   body: {
+    //     ts: 6,
+    //     md: 3,
+    //     js: 1,
+    //   },
+    // }).as('updateData');
 
     cy.visit(appUrl, {
       onBeforeLoad: (win) => {
@@ -221,25 +221,6 @@ describe('CLOC-WEB application', () => {
       clocAndCheck('Counted 3 files and 9 lines of code');
     });
 
-    // it("should be able to turn on logs", () => {
-    //   cy.get("[data-test-id='settings-icon']").click();
-    //   // cy.get("input[type='checkbox']").click();
-    //   cy.get('input[type="range"]')
-    //     .eq(0)
-    //     .then((input) => {
-    //       cy.controlledInputChange(input, "0");
-    //     })
-    //     .get("button")
-    //     .contains("CLOC of a project")
-    //     .click()
-    //     .get("[data-test-id='results-label']")
-    //     .contains(`Counted 4 files and 10 lines of code`);
-
-    //   // TODO: this is not working... we should count the amount of logs, or check the last one
-    //   console.log(cy.get("@consoleSpy").calls);
-    //   cy.get("@consoleSpy").should("have.been.calledWith", "CLOC of a project");
-    // });
-
     it('should be able to customize workers', () => {
       cy.get("[data-test-id='settings-icon']").click();
 
@@ -251,7 +232,8 @@ describe('CLOC-WEB application', () => {
     });
   });
 
-  it('should send counted results to the server', () => {
+  // We don't do this anymore because FaunaDB is dead
+  it.skip('should send counted results to the server', () => {
     cy.get("[data-test-id='settings-icon']").click();
     cy.get('input[type="range"]')
       .eq(0)

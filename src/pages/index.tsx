@@ -121,15 +121,15 @@ const Home: NextPage = () => {
     startTime = 0;
     endTime = 0;
 
-    // save data
-    const clocObj: any = {};
-    clocRes.forEach((v, k) => {
-      clocObj[k] = v;
-    });
-    fetch('/.netlify/functions/update', {
-      method: 'POST',
-      body: JSON.stringify({ data: clocObj }),
-    });
+    // save data - we don't do that anymore because FaunaDB is dead
+    // const clocObj: any = {};
+    // clocRes.forEach((v, k) => {
+    //   clocObj[k] = v;
+    // });
+    // fetch('/.netlify/functions/update', {
+    //   method: 'POST',
+    //   body: JSON.stringify({ data: clocObj }),
+    // });
   };
 
   const getDirHandle = async (sendToWorker = true) => {
@@ -296,10 +296,6 @@ const Home: NextPage = () => {
 
       worker = new Worker(new URL('../workers/main.ts', import.meta.url));
       worker.addEventListener('message', onWorkerMessage);
-
-      fetch('/.netlify/functions/get-data')
-        .then((res) => res.json())
-        .then((res) => console.log(res));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
