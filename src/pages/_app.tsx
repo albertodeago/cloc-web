@@ -5,11 +5,10 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 
 import * as Sentry from '@sentry/browser';
-import { BrowserTracing } from '@sentry/tracing';
 
 Sentry.init({
   dsn: 'https://b1a60c0ddda143abb40d90d58b6a6280@o1140912.ingest.sentry.io/6198515',
-  integrations: [new BrowserTracing()],
+  integrations: [Sentry.browserTracingIntegration()],
 
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
