@@ -13,8 +13,8 @@
     "test:unit:ci": "jest --ci",
     "cypress": "cypress open",
     "cypress:headless": "cypress run",
-    "e2e": "start-server-and-test dev http://localhost:3000 cypress",
-    "e2e:headless": "start-server-and-test dev http://localhost:3000 cypress:headless"
+    "e2e": "start-server-and-test dev http://localhost:8888 cypress",
+    "e2e:headless": "start-server-and-test dev http://localhost:8888 cypress:headless"
   },
   "dependencies": {
     "@cronitorio/cronitor-rum-js": "0.2.0",
@@ -37,7 +37,7 @@
     "@types/node": "25.0.5",
     "@types/react": "19.2.8",
     "babel-jest": "27.4.5",
-    "cypress": "9.3.1",
+    "cypress": "15.8.2",
     "eslint": "9.39.2",
     "eslint-config-next": "16.1.1",
     "jest": "30.2.0",
