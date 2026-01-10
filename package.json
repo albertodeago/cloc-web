@@ -19,8 +19,7 @@
   "dependencies": {
     "@cronitorio/cronitor-rum-js": "0.2.0",
     "@cronitorio/cronitor-rum-nextjs": "0.5.1",
-    "@sentry/browser": "6.17.6",
-    "@sentry/tracing": "6.17.6",
+    "@sentry/browser": "10.32.1",
     "@types/wicg-file-system-access": "2023.10.7",
     "faunadb": "4.4.1",
     "framer-motion": "12.25.0",
